@@ -1,23 +1,18 @@
 package com.yyoung.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
+import com.yyoung.bookstore.constants.Role;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-enum UserRole {
-    USER,
-    ADMIN
-}
-
+@Data
 @Entity
-@Table(name="users")
-@Getter
-@Setter
+@Table(name = "users")
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue
@@ -35,11 +30,17 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role = UserRole.USER;
+    private Role role = Role.user;
 
     @Column(nullable = false)
     private Boolean disabled = false;
 
     @OneToMany
     private List<Book> cart = new ArrayList<>();
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }
