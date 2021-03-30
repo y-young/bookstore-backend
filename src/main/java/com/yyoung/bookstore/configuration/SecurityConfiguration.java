@@ -1,5 +1,6 @@
-package com.yyoung.bookstore;
+package com.yyoung.bookstore.configuration;
 
+import com.yyoung.bookstore.constants.SecurityConstants;
 import com.yyoung.bookstore.exception.JwtAccessDeniedHandler;
 import com.yyoung.bookstore.exception.JwtAuthenticationEntryPoint;
 import com.yyoung.bookstore.filter.JwtAuthenticationFilter;
@@ -25,8 +26,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/users/register").permitAll()
-                .antMatchers("/auth/*").permitAll()
+                .antMatchers(SecurityConstants.PUBLIC_ROUTES).permitAll()
+                .antMatchers(SecurityConstants.SWAGGER_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))

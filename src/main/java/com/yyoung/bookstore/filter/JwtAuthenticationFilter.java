@@ -1,6 +1,6 @@
 package com.yyoung.bookstore.filter;
 
-import com.yyoung.bookstore.constants.AuthConstants;
+import com.yyoung.bookstore.constants.SecurityConstants;
 import com.yyoung.bookstore.utils.JwtUtils;
 import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,13 +24,13 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String token = request.getHeader(AuthConstants.TOKEN_HEADER);
-        if (token == null || !token.startsWith(AuthConstants.TOKEN_PREFIX)) {
+        String token = request.getHeader(SecurityConstants.TOKEN_HEADER);
+        if (token == null || !token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
             SecurityContextHolder.clearContext();
             chain.doFilter(request, response);
             return;
         }
-        String tokenValue = token.replace(AuthConstants.TOKEN_PREFIX, "");
+        String tokenValue = token.replace(SecurityConstants.TOKEN_PREFIX, "");
         UsernamePasswordAuthenticationToken authentication = null;
         try {
             authentication = JwtUtils.getAuthentication(tokenValue);

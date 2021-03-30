@@ -1,5 +1,6 @@
 package com.yyoung.bookstore.entity;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
+@ApiModel("用户认证信息")
 public class AuthUser implements UserDetails {
     private Integer id;
     private String username;

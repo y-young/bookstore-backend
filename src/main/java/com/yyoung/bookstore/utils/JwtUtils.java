@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.yyoung.bookstore.constants.AuthConstants.*;
+import static com.yyoung.bookstore.constants.SecurityConstants.*;
 
 public class JwtUtils {
     public static String createToken(String username, String id, List<String> roles) {
