@@ -10,7 +10,6 @@ import java.io.IOException;
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
-        accessDeniedException = new AccessDeniedException("抱歉，您没有此操作权限");
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "抱歉，您没有此操作权限");
     }
 }
