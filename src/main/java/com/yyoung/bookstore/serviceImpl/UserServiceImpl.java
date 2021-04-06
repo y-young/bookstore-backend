@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.serviceImpl;
 
 import com.yyoung.bookstore.dao.UserDao;
+import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,7 +25,8 @@ public class UserServiceImpl implements UserService {
         return bCryptPasswordEncoder.matches(inputPassword, userPassword);
     }
 
-    public void register(String username, String password, String email) {
-        userDao.save(username, bCryptPasswordEncoder.encode(password), email);
+    public void register(NewUser newUser) {
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        userDao.save(newUser);
     }
 }

@@ -34,10 +34,10 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         UsernamePasswordAuthenticationToken authentication = null;
         try {
             authentication = JwtUtils.getAuthentication(tokenValue);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (JwtException e) {
-            logger.error("Invalid jwt : " + e.getMessage());
+            logger.warn("Invalid jwt : " + e.getMessage());
         }
-        SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
 }
