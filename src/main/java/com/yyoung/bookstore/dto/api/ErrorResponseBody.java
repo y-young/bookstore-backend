@@ -1,4 +1,4 @@
-package com.yyoung.bookstore.utils.controller;
+package com.yyoung.bookstore.dto.api;
 
 import lombok.Data;
 

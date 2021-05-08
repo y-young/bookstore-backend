@@ -1,4 +1,4 @@
-package com.yyoung.bookstore.utils.controller;
+package com.yyoung.bookstore.dto.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

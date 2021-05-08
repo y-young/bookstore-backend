@@ -19,6 +19,7 @@ public class SecurityConstants {
 
     public static final String[] PUBLIC_ROUTES = {
             "/users/register",
+            "/users/login",
             "/auth/*"
     };
 }

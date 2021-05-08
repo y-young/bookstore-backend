@@ -1,10 +1,9 @@
 package com.yyoung.bookstore.exception;
 
-import com.yyoung.bookstore.utils.controller.ErrorResponse;
+import com.yyoung.bookstore.dto.api.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -34,7 +33,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ErrorResponse missingRequestBodyExceptionHandler(HttpMessageNotReadableException exception) {
-        return new ErrorResponse("请求体不能为空");
+        return new ErrorResponse("参数不合法或请求体为空");
     }
 
     // Invalid argument
@@ -68,5 +67,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ErrorResponse httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException exception) {
         return new ErrorResponse("不支持的请求方法: " + exception.getMethod(), HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    // Bad credentials
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadCredentialsException.class)
+    public ErrorResponse badCredentialsExceptionHandler(BadCredentialsException exception) {
+        return new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
