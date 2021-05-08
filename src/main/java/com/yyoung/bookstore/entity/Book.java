@@ -2,10 +2,12 @@ package com.yyoung.bookstore.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 @Data
+@AllArgsConstructor
 @ApiModel("书籍")
 public class Book {
     @Id
