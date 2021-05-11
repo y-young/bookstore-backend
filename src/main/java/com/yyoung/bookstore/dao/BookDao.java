@@ -8,4 +8,6 @@ public interface BookDao {
     Book findById(Integer bookId);
 
     List<Book> findAll();
+
+    void deductStock(Book book, Integer amount);
 }

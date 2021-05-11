@@ -13,4 +13,6 @@ public interface UserService {
     void register(NewUser newUser);
 
     AuthResult login(LoginCredentials loginRequest);
+
+    User getCurrentUser();
 }

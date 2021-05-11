@@ -45,4 +45,8 @@ public class BookRepository {
             return Optional.empty();
         }
     }
+
+    public void updateStock(Integer bookId, Integer stock) {
+        jdbcTemplate.update("UPDATE book SET stock=? WHERE id=?", stock, bookId);
+    }
 }

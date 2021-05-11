@@ -38,8 +38,8 @@ public class JwtUtils {
     public static UsernamePasswordAuthenticationToken getAuthentication(String token) {
         Claims claims = getClaims(token);
         List<SimpleGrantedAuthority> authorities = getAuthorities(claims);
-        String userName = claims.getSubject();
-        return new UsernamePasswordAuthenticationToken(userName, token, authorities);
+        String username = claims.getSubject();
+        return new UsernamePasswordAuthenticationToken(username, token, authorities);
     }
 
     private static List<SimpleGrantedAuthority> getAuthorities(Claims claims) {

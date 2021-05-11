@@ -13,7 +13,9 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class GlobalExceptionHandler {
     // Missing request body
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ErrorResponse missingRequestBodyExceptionHandler(HttpMessageNotReadableException exception) {
+    public ErrorResponse missingRequestBodyExceptionHandler() {
         return new ErrorResponse("参数不合法或请求体为空");
     }
 
@@ -51,11 +53,15 @@ public class GlobalExceptionHandler {
         return new ErrorResponse("参数不合法");
     }
 
-    // Invalid path variable
+    // Invalid path variable or request param
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ErrorResponse constraintViolationExceptionHandler(ConstraintViolationException exception) {
-        String message = exception.getMessage();
+        String message = "";
+        for (ConstraintViolation<?> violation : exception.getConstraintViolations()) {
+            message = violation.getMessage();
+            break;
+        }
         if (message.isEmpty()) {
             return new ErrorResponse("参数不合法");
         }
@@ -74,5 +80,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ErrorResponse badCredentialsExceptionHandler(BadCredentialsException exception) {
         return new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    // Invalid path variable type
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public void methodArgumentTypeMismatchExceptionHandler() {
     }
 }
