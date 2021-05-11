@@ -1,5 +1,6 @@
 package com.yyoung.bookstore.service;
 
+import com.yyoung.bookstore.dto.AuthResult;
 import com.yyoung.bookstore.dto.LoginCredentials;
 import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.entity.User;
@@ -11,5 +12,5 @@ public interface UserService {
 
     void register(NewUser newUser);
 
-    String login(LoginCredentials loginRequest);
+    AuthResult login(LoginCredentials loginRequest);
 }

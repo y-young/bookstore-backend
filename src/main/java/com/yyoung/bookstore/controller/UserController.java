@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.controller;
 
 import com.yyoung.bookstore.constants.SecurityConstants;
+import com.yyoung.bookstore.dto.AuthResult;
 import com.yyoung.bookstore.dto.LoginCredentials;
 import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.dto.api.DataResponse;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -22,15 +22,16 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
 
-    @ApiOperation("用户登录")
+    @ApiOperation("登录")
     @PostMapping("/login")
-    public DataResponse<?> login(@RequestBody LoginCredentials loginCredentials) {
-        String token = userService.login(loginCredentials);
+    public ResponseEntity<DataResponse<AuthResult>> login(@RequestBody LoginCredentials loginCredentials) {
+        AuthResult authResult = userService.login(loginCredentials);
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(SecurityConstants.TOKEN_HEADER, token);
-        return new DataResponse<>(httpHeaders);
+        httpHeaders.set(SecurityConstants.TOKEN_HEADER, authResult.getAuthorization());
+        return new ResponseEntity<>(new DataResponse<>(authResult), httpHeaders, HttpStatus.OK);
     }
 
+    @ApiOperation("注册")
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody NewUser newUser) {
         userService.register(newUser);
