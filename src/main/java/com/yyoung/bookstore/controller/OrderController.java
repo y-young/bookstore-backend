@@ -30,6 +30,6 @@ public class OrderController {
     @ApiOperation("查看订单详情")
     @GetMapping("/{orderId}")
     public DataResponse<OrderDto> viewOrder(@PathVariable Integer orderId) {
-        return new DataResponse<>(new OrderDto());
+        return new DataResponse<>(orderService.viewOrder(orderId));
     }
 }

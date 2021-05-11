@@ -42,8 +42,13 @@ public class OrderServiceImpl implements OrderService {
             modelMapper.map(book, item);
             order.addItem(item);
         }
-        Integer orderId = orderDao.placeOrder(items, total, user);
+        Integer orderId = orderDao.addOrder(items, total, user);
         order.setId(orderId);
         return order;
+    }
+
+    public OrderDto viewOrder(Integer orderId) {
+        User user = userService.getCurrentUser();
+        return orderDao.getOrder(orderId, user.getId());
     }
 }

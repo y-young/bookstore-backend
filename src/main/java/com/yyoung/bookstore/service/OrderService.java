@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OrderService {
     OrderDto placeOrder(List<OrderItem> items);
+
+    OrderDto viewOrder(Integer orderId);
 }
