@@ -23,4 +23,8 @@ public class UserDaoImpl implements UserDao {
         User user = modelMapper.map(newUser, User.class);
         userRepository.save(user);
     }
+    
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
 }

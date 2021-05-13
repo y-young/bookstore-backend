@@ -6,6 +6,7 @@ import com.yyoung.bookstore.dto.LoginCredentials;
 import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.entity.AuthUser;
 import com.yyoung.bookstore.entity.User;
+import com.yyoung.bookstore.exception.BusinessLogicException;
 import com.yyoung.bookstore.service.UserService;
 import com.yyoung.bookstore.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public void register(NewUser newUser) {
+        if (userDao.existsByUsername(newUser.getUsername())) {
+            throw new BusinessLogicException("用户名已存在");
+        }
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         userDao.save(newUser);
     }

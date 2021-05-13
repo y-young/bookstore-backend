@@ -7,4 +7,6 @@ public interface UserDao {
     User findByUsername(String username);
 
     void save(NewUser newUser);
+
+    boolean existsByUsername(String username);
 }

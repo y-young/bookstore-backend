@@ -5,8 +5,6 @@ import com.yyoung.bookstore.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,5 +46,10 @@ public class UserRepository {
                 user.getDisabled(),
                 user.getRole().toString()
         );
+    }
+
+    public boolean existsByUsername(String username) {
+        Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM user WHERE username=?", Integer.class, username);
+        return count != null && count > 0;
     }
 }
