@@ -51,4 +51,9 @@ public class OrderServiceImpl implements OrderService {
         User user = userService.getCurrentUser();
         return orderDao.getOrder(orderId, user.getId());
     }
+
+    public List<OrderDto> viewMyOrders() {
+        User user = userService.getCurrentUser();
+        return orderDao.getUserOrders(user.getId());
+    }
 }

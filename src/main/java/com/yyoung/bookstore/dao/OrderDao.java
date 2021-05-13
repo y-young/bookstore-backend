@@ -10,4 +10,6 @@ public interface OrderDao {
     Integer addOrder(List<OrderItem> items, float total, User user);
 
     OrderDto getOrder(Integer orderId, Integer userId);
+
+    List<OrderDto> getUserOrders(Integer userId);
 }

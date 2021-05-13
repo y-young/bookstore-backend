@@ -9,4 +9,6 @@ public interface OrderService {
     OrderDto placeOrder(List<OrderItem> items);
 
     OrderDto viewOrder(Integer orderId);
+    
+    List<OrderDto> viewMyOrders();
 }

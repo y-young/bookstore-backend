@@ -4,18 +4,48 @@ import com.yyoung.bookstore.dto.OrderDto;
 import com.yyoung.bookstore.dto.OrderItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
+class OrderDtoResultExtractor implements ResultSetExtractor<List<OrderDto>> {
+    @Override
+    public List<OrderDto> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+        Map<Integer, OrderDto> orders = new HashMap<>();
+        while (resultSet.next()) {
+            Integer orderId = resultSet.getInt("id");
+            if (!orders.containsKey(orderId)) {
+                orders.put(orderId, new OrderDto(
+                        orderId,
+                        resultSet.getFloat("total"),
+                        resultSet.getTimestamp("time")
+                ));
+            }
+            orders.get(orderId).addItem(new OrderItem(
+                    resultSet.getInt("book_id"),
+                    resultSet.getString("title"),
+                    resultSet.getString("author"),
+                    resultSet.getString("isbn"),
+                    resultSet.getInt("stock"),
+                    resultSet.getFloat("price"),
+                    resultSet.getString("type"),
+                    resultSet.getString("cover"),
+                    resultSet.getInt("amount")
+            ));
+        }
+        return new ArrayList<>(orders.values());
+    }
+}
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -49,35 +79,22 @@ public class OrderRepository {
 
     public Optional<OrderDto> findByIdAndUserId(Integer orderId, Integer userId) {
         List<OrderDto> orders = jdbcTemplate.query(
-                "SELECT * FROM `order` WHERE id=? AND user_id=?",
-                (resultSet, i) -> new OrderDto(
-                        resultSet.getInt("id"),
-                        resultSet.getFloat("total"),
-                        resultSet.getTimestamp("time")
-                ),
+                "SELECT * FROM `order` JOIN order_book ob on `order`.id = ob.order_id JOIN book b on b.id = ob.book_id WHERE order_id=? AND user_id=?",
+                new OrderDtoResultExtractor(),
                 orderId,
                 userId
         );
-        if (orders.isEmpty()) {
+        if (orders == null || orders.isEmpty()) {
             return Optional.empty();
         }
-        OrderDto order = orders.get(0);
-        List<OrderItem> orderItems = jdbcTemplate.query(
-                "SELECT * FROM order_book JOIN book b on order_book.book_id = b.id WHERE order_id=?",
-                (resultSet, i) -> new OrderItem(
-                        resultSet.getInt("book_id"),
-                        resultSet.getString("title"),
-                        resultSet.getString("author"),
-                        resultSet.getString("isbn"),
-                        resultSet.getInt("stock"),
-                        resultSet.getFloat("price"),
-                        resultSet.getString("type"),
-                        resultSet.getString("cover"),
-                        resultSet.getInt("amount")
-                ),
-                orderId
+        return Optional.of(orders.get(0));
+    }
+
+    public List<OrderDto> findByUserId(Integer userId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM `order` JOIN order_book ob on `order`.id = ob.order_id JOIN book b on b.id = ob.book_id WHERE user_id=?",
+                new OrderDtoResultExtractor(),
+                userId
         );
-        order.setItems(orderItems);
-        return Optional.of(order);
     }
 }

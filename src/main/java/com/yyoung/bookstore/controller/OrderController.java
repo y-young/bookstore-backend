@@ -32,4 +32,10 @@ public class OrderController {
     public DataResponse<OrderDto> viewOrder(@PathVariable Integer orderId) {
         return new DataResponse<>(orderService.viewOrder(orderId));
     }
+
+    @ApiOperation("查看当前用户的所有订单")
+    @GetMapping("/my")
+    public DataResponse<List<OrderDto>> viewMyOrders() {
+        return new DataResponse<>(orderService.viewMyOrders());
+    }
 }

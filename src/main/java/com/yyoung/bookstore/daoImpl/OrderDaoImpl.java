@@ -25,4 +25,8 @@ public class OrderDaoImpl implements OrderDao {
     public OrderDto getOrder(Integer orderId, Integer userId) {
         return orderRepository.findByIdAndUserId(orderId, userId).orElseThrow(ResourceNotFoundException::new);
     }
+
+    public List<OrderDto> getUserOrders(Integer userId) {
+        return orderRepository.findByUserId(userId);
+    }
 }
