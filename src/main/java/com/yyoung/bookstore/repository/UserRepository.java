@@ -40,15 +40,13 @@ public class UserRepository {
     }
 
     public void save(User user) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 "INSERT INTO user (username, email, password, disabled, role) VALUES (?, ?, ?, ?, ?)",
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
                 user.getDisabled(),
-                user.getRole().toString(),
-                keyHolder
+                user.getRole().toString()
         );
     }
 }
