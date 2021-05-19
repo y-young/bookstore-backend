@@ -5,16 +5,21 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+
+import javax.persistence.*;
 
 @Data
+@Entity
+@Table(name = "books")
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel("书籍")
 public class Book {
     @Id
+    @GeneratedValue
     private Integer id;
 
+    @Column(nullable = false)
     @ApiModelProperty("书名")
     private String title;
 
@@ -24,11 +29,13 @@ public class Book {
     @ApiModelProperty("ISBN")
     private String isbn;
 
+    @Column(nullable = false)
     @ApiModelProperty("库存")
     private Integer stock = 0;
 
-    @ApiModelProperty("价格")
-    private Float price = 0.0F;
+    @Column(nullable = false)
+    @ApiModelProperty("价格（分）")
+    private Integer price;
 
     @ApiModelProperty("书籍类型")
     private String type;

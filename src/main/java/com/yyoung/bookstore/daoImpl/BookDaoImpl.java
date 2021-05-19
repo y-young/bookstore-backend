@@ -26,6 +26,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     public void deductStock(Book book, Integer amount) {
-        bookRepository.updateStock(book.getId(), book.getStock() - amount);
+        book.setStock(book.getStock() - amount);
+        bookRepository.save(book);
     }
 }

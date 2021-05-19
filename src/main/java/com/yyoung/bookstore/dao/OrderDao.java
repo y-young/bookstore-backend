@@ -1,15 +1,13 @@
 package com.yyoung.bookstore.dao;
 
-import com.yyoung.bookstore.dto.OrderDto;
-import com.yyoung.bookstore.dto.OrderItem;
-import com.yyoung.bookstore.entity.User;
+import com.yyoung.bookstore.entity.Order;
 
 import java.util.List;
 
 public interface OrderDao {
-    Integer addOrder(List<OrderItem> items, float total, User user);
+    Order addOrder(Order order);
 
-    OrderDto getOrder(Integer orderId, Integer userId);
+    Order getOrder(Integer orderId, Integer userId);
 
-    List<OrderDto> getUserOrders(Integer userId);
+    List<Order> getUserOrders(Integer userId);
 }

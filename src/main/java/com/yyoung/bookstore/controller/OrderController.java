@@ -1,8 +1,8 @@
 package com.yyoung.bookstore.controller;
 
-import com.yyoung.bookstore.dto.OrderDto;
 import com.yyoung.bookstore.dto.OrderItem;
 import com.yyoung.bookstore.dto.api.DataResponse;
+import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +23,19 @@ public class OrderController {
 
     @ApiOperation("提交订单")
     @PostMapping
-    public DataResponse<OrderDto> placeOrder(@RequestBody @NotEmpty(message = "订单中没有商品") List<@Valid OrderItem> items) {
+    public DataResponse<Order> placeOrder(@RequestBody @NotEmpty(message = "订单中没有商品") List<@Valid OrderItem> items) {
         return new DataResponse<>(orderService.placeOrder(items));
     }
 
     @ApiOperation("查看订单详情")
     @GetMapping("/{orderId}")
-    public DataResponse<OrderDto> viewOrder(@PathVariable Integer orderId) {
+    public DataResponse<Order> viewOrder(@PathVariable Integer orderId) {
         return new DataResponse<>(orderService.viewOrder(orderId));
     }
 
     @ApiOperation("查看当前用户的所有订单")
     @GetMapping("/my")
-    public DataResponse<List<OrderDto>> viewMyOrders() {
+    public DataResponse<List<Order>> viewMyOrders() {
         return new DataResponse<>(orderService.viewMyOrders());
     }
 }

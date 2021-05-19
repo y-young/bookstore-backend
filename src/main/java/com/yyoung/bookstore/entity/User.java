@@ -6,24 +6,34 @@ import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+
+import javax.persistence.*;
 
 @Data
+@Entity
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "用户")
 public class User {
     @Id
+    @GeneratedValue
     private Integer id;
 
+    @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
     private String email;
 
     @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role = Role.user;
 
+    @Column(nullable = false)
     private Boolean disabled = false;
 }
