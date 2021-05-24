@@ -1,6 +1,5 @@
 package com.yyoung.bookstore.entity;
 
-import com.yyoung.bookstore.dto.OrderItem;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -10,4 +10,10 @@ public interface BookDao {
     List<Book> findAll();
 
     void deductStock(Book book, Integer amount);
+
+    void addOne(Book book);
+
+    void deleteOne(Integer bookId);
+
+    Book updateOne(Book book);
 }

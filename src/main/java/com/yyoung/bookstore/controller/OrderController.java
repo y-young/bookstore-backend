@@ -1,6 +1,6 @@
 package com.yyoung.bookstore.controller;
 
-import com.yyoung.bookstore.dto.OrderItem;
+import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.service.OrderService;

@@ -1,8 +1,6 @@
-package com.yyoung.bookstore.dto;
+package com.yyoung.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.yyoung.bookstore.entity.Book;
-import com.yyoung.bookstore.entity.Order;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

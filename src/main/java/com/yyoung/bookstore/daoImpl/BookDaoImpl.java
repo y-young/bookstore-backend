@@ -6,9 +6,7 @@ import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -18,7 +16,7 @@ public class BookDaoImpl implements BookDao {
     private final BookRepository bookRepository;
 
     public Book findById(Integer bookId) {
-        return bookRepository.findById(bookId).orElseThrow(() -> new ResourceNotFoundException());
+        return bookRepository.findById(bookId).orElseThrow(ResourceNotFoundException::new);
     }
 
     public List<Book> findAll() {
@@ -28,5 +26,17 @@ public class BookDaoImpl implements BookDao {
     public void deductStock(Book book, Integer amount) {
         book.setStock(book.getStock() - amount);
         bookRepository.save(book);
+    }
+
+    public void addOne(Book book) {
+        bookRepository.save(book);
+    }
+
+    public void deleteOne(Integer bookId) {
+        bookRepository.deleteById(bookId);
+    }
+
+    public Book updateOne(Book book) {
+        return bookRepository.save(book);
     }
 }

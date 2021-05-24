@@ -2,7 +2,7 @@ package com.yyoung.bookstore.serviceImpl;
 
 import com.yyoung.bookstore.dao.BookDao;
 import com.yyoung.bookstore.dao.OrderDao;
-import com.yyoung.bookstore.dto.OrderItem;
+import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.entity.User;

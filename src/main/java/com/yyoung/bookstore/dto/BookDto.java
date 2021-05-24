@@ -1,29 +1,17 @@
-package com.yyoung.bookstore.entity;
+package com.yyoung.bookstore.dto;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 @Data
-@Entity
-@Table(name = "books")
-@AllArgsConstructor
-@NoArgsConstructor
-@ApiModel("书籍")
-public class Book {
-    @Id
-    @GeneratedValue
-    private Integer id;
-
-    @Column(nullable = false)
+public class BookDto {
     @ApiModelProperty("书名")
+    @NotBlank(message = "书名为必填项")
     private String title;
 
     @ApiModelProperty("作者")
@@ -32,12 +20,14 @@ public class Book {
     @ApiModelProperty("ISBN")
     private String isbn;
 
-    @Column(nullable = false)
     @ApiModelProperty("库存量")
+    @NotNull(message = "库存量为必填项")
+    @PositiveOrZero(message = "库存量应为非负数")
     private Integer stock = 0;
 
-    @Column(nullable = false)
     @ApiModelProperty("价格（分）")
+    @NotNull(message = "价格为必填项")
+    @Positive(message = "价格应为正数")
     private Integer price;
 
     @ApiModelProperty("书籍类型")

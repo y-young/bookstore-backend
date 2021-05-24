@@ -1,6 +1,6 @@
 package com.yyoung.bookstore.service;
 
-import com.yyoung.bookstore.dto.OrderItem;
+import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.Order;
 
 import java.util.List;
