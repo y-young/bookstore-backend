@@ -5,6 +5,7 @@ import com.yyoung.bookstore.dto.AuthResult;
 import com.yyoung.bookstore.dto.LoginCredentials;
 import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.dto.api.DataResponse;
+import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -36,5 +39,28 @@ public class UserController {
     public ResponseEntity<?> register(@Valid @RequestBody NewUser newUser) {
         userService.register(newUser);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation("获取所有用户")
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping
+    public DataResponse<List<User>> getUsers() {
+        return new DataResponse<>(userService.getAll());
+    }
+
+    @ApiOperation("禁用用户")
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping("/{userId}/disable")
+    public ResponseEntity<?> disableUser(@PathVariable Integer userId) {
+        userService.disableUser(userId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation("启用用户")
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping("/{userId}/enable")
+    public ResponseEntity<?> enableUser(@PathVariable Integer userId) {
+        userService.enableUser(userId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

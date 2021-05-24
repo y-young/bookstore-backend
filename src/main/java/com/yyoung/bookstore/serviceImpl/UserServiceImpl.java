@@ -27,6 +27,10 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    public List<User> getAll() {
+        return userDao.getAll();
+    }
+
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
     }
@@ -64,5 +68,17 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getPrincipal().toString();
         return userDao.findByUsername(username);
+    }
+
+    public void disableUser(Integer userId) {
+        User user = getCurrentUser();
+        if (userId.equals(user.getId())) {
+            throw new BusinessLogicException("不允许禁用当前用户");
+        }
+        userDao.disableById(userId);
+    }
+
+    public void enableUser(Integer userId) {
+        userDao.enableById(userId);
     }
 }
