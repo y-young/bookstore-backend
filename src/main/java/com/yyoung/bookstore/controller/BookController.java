@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.controller;
 
 import com.yyoung.bookstore.dto.BookDto;
+import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.service.BookService;
@@ -8,12 +9,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.net.URLConnection;
 import java.util.List;
 
 @RestController
@@ -56,5 +62,20 @@ public class BookController {
     @PutMapping("/{bookId}")
     public DataResponse<Book> editBook(@PathVariable Integer bookId, @Valid @RequestBody BookDto book) {
         return new DataResponse<>(bookService.updateOne(bookId, book));
+    }
+
+    @ApiOperation("上传封面")
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping("/cover")
+    public DataResponse<UploadResult> uploadCover(@RequestParam("file") MultipartFile file) {
+        return new DataResponse<>(bookService.uploadCover(file));
+    }
+
+    @ApiOperation("查看封面")
+    @GetMapping("/cover/{filename}")
+    public ResponseEntity<?> viewCover(@PathVariable("filename") String filename) {
+        Resource image = bookService.viewCover(filename);
+        String fileType = URLConnection.guessContentTypeFromName(image.getFilename());
+        return ResponseEntity.ok().contentType(MediaType.valueOf(fileType)).body(image);
     }
 }

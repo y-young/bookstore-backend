@@ -1,7 +1,7 @@
 package com.yyoung.bookstore.exception;
 
 import com.yyoung.bookstore.dto.api.ErrorResponse;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.util.List;
 
-@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -27,7 +28,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ErrorResponse missingRequestParameterExceptionHandler(MissingServletRequestParameterException exception) {
-        log.warn(exception.toString());
         return new ErrorResponse(exception.getParameterName() + "参数不能为空");
     }
 
@@ -79,12 +79,31 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadCredentialsException.class)
     public ErrorResponse badCredentialsExceptionHandler(BadCredentialsException exception) {
-        return new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ErrorResponse(exception.getMessage());
     }
 
     // Invalid path variable type
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public void methodArgumentTypeMismatchExceptionHandler() {
+    }
+
+    // File size limit exceeded
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(FileSizeLimitExceededException.class)
+    public ErrorResponse fileSizeLimitExceededExceptionHandler(FileSizeLimitExceededException exception) {
+        return new ErrorResponse("上传的文件大小超过限制");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ValidationException.class)
+    public ErrorResponse validationExceptionHandler(ValidationException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MultipartException.class)
+    public ErrorResponse multipartExceptionHandler(MultipartException exception) {
+        return new ErrorResponse("文件上传失败");
     }
 }
