@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yyoung.bookstore.constants.Role;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "用户")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
     @GeneratedValue

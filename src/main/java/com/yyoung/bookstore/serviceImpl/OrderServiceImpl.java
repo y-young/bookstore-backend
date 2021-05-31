@@ -28,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
     public Order placeOrder(List<OrderItem> items) {
         User user = userService.getCurrentUser();
         Order order = new Order();
-        int total = 0;
+        int total = 0, totalAmount = 0;
         for (OrderItem item :
                 items) {
             Book book = bookDao.findById(item.getBook().getId());
@@ -37,11 +37,13 @@ public class OrderServiceImpl implements OrderService {
                 throw new BusinessLogicException("库存不足");
             }
             bookDao.deductStock(book, amount);
+            totalAmount += amount;
             total += book.getPrice() * amount;
             item.setBook(book);
             order.addItem(item);
         }
         order.setUser(user);
+        order.setTotalAmount(totalAmount);
         order.setTotal(total);
         return orderDao.addOrder(order);
     }

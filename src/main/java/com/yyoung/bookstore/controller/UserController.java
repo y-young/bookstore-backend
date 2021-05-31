@@ -4,6 +4,7 @@ import com.yyoung.bookstore.constants.SecurityConstants;
 import com.yyoung.bookstore.dto.AuthResult;
 import com.yyoung.bookstore.dto.LoginCredentials;
 import com.yyoung.bookstore.dto.NewUser;
+import com.yyoung.bookstore.dto.UserConsumption;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.service.UserService;
@@ -62,5 +63,12 @@ public class UserController {
     public ResponseEntity<?> enableUser(@PathVariable Integer userId) {
         userService.enableUser(userId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation("查看用户消费榜")
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/rank")
+    public DataResponse<List<UserConsumption>> getRank() {
+        return new DataResponse<>(userService.getRank());
     }
 }

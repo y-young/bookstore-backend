@@ -31,6 +31,10 @@ public class Order {
     private Integer total = 0;
 
     @Column(nullable = false)
+    @ApiModelProperty("商品总数")
+    private Integer totalAmount = 0;
+
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date time;

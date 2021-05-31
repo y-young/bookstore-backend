@@ -2,6 +2,7 @@ package com.yyoung.bookstore.daoImpl;
 
 import com.yyoung.bookstore.dao.UserDao;
 import com.yyoung.bookstore.dto.NewUser;
+import com.yyoung.bookstore.dto.UserConsumption;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.UserRepository;
@@ -17,7 +18,7 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    
+
     public List<User> getAll() {
         return userRepository.findAll();
     }
@@ -45,5 +46,9 @@ public class UserDaoImpl implements UserDao {
         User user = userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new);
         user.setDisabled(false);
         userRepository.save(user);
+    }
+
+    public List<UserConsumption> getRank() {
+        return userRepository.getRank();
     }
 }

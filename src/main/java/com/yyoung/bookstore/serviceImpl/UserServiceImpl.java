@@ -4,6 +4,7 @@ import com.yyoung.bookstore.dao.UserDao;
 import com.yyoung.bookstore.dto.AuthResult;
 import com.yyoung.bookstore.dto.LoginCredentials;
 import com.yyoung.bookstore.dto.NewUser;
+import com.yyoung.bookstore.dto.UserConsumption;
 import com.yyoung.bookstore.entity.AuthUser;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
@@ -80,5 +81,9 @@ public class UserServiceImpl implements UserService {
 
     public void enableUser(Integer userId) {
         userDao.enableById(userId);
+    }
+
+    public List<UserConsumption> getRank() {
+        return userDao.getRank();
     }
 }
