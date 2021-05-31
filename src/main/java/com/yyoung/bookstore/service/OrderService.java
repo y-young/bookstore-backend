@@ -7,6 +7,8 @@ import com.yyoung.bookstore.entity.Order;
 import java.util.List;
 
 public interface OrderService {
+    List<Order> viewAllOrders();
+    
     Order placeOrder(List<OrderItem> items);
 
     Order viewOrder(Integer orderId);

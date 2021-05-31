@@ -1,5 +1,6 @@
 package com.yyoung.bookstore.serviceImpl;
 
+import com.yyoung.bookstore.constants.Role;
 import com.yyoung.bookstore.dao.BookDao;
 import com.yyoung.bookstore.dao.OrderDao;
 import com.yyoung.bookstore.dto.BookTypeCount;
@@ -23,6 +24,10 @@ public class OrderServiceImpl implements OrderService {
     private final BookDao bookDao;
     private final OrderDao orderDao;
     private final UserService userService;
+
+    public List<Order> viewAllOrders() {
+        return orderDao.getAllOrders();
+    }
 
     @Transactional
     public Order placeOrder(List<OrderItem> items) {
@@ -50,7 +55,11 @@ public class OrderServiceImpl implements OrderService {
 
     public Order viewOrder(Integer orderId) {
         User user = userService.getCurrentUser();
-        return orderDao.getOrder(orderId, user.getId());
+        if (user.getRole().equals(Role.admin)) { // Administrators can view orders of all users
+            return orderDao.getOrder(orderId);
+        } else { // While normal users can only view their own ones
+            return orderDao.getOrder(orderId, user.getId());
+        }
     }
 
     public List<Order> viewMyOrders() {

@@ -16,8 +16,17 @@ import java.util.List;
 public class OrderDaoImpl implements OrderDao {
     private final OrderRepository orderRepository;
 
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
     public Order addOrder(Order order) {
         return orderRepository.save(order);
+    }
+
+    // Get order without limitations, used by administrators
+    public Order getOrder(Integer orderId) {
+        return orderRepository.findById(orderId).orElseThrow(ResourceNotFoundException::new);
     }
 
     // Get the order of orderId where user_id = userId, along with access control

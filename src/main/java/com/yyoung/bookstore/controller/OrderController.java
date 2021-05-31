@@ -8,6 +8,7 @@ import com.yyoung.bookstore.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,13 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
+    @ApiOperation("查看所有订单")
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping
+    public DataResponse<List<Order>> viewAllOrders() {
+        return new DataResponse<>(orderService.viewAllOrders());
+    }
+
     @ApiOperation("提交订单")
     @PostMapping
     public DataResponse<Order> placeOrder(@RequestBody @NotEmpty(message = "订单中没有商品") List<@Valid OrderItem> items) {
@@ -29,6 +37,7 @@ public class OrderController {
     }
 
     @ApiOperation("查看订单详情")
+    // Access control implemented in service
     @GetMapping("/{orderId}")
     public DataResponse<Order> viewOrder(@PathVariable Integer orderId) {
         return new DataResponse<>(orderService.viewOrder(orderId));

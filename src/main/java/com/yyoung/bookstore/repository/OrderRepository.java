@@ -10,6 +10,9 @@ import java.util.*;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Integer> {
+    @Override
+    List<Order> findAll();
+
     Optional<Order> findByIdAndUserId(Integer orderId, Integer userId);
 
     List<Order> findByUserId(Integer userId);
