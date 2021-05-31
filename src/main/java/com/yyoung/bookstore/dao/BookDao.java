@@ -1,5 +1,6 @@
 package com.yyoung.bookstore.dao;
 
+import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.entity.Book;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface BookDao {
     void deleteOne(Integer bookId);
 
     Book updateOne(Book book);
+
+    List<BookSales> getSales();
 }

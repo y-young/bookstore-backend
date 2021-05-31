@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.service;
 
 import com.yyoung.bookstore.dto.BookDto;
+import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.entity.Book;
 import org.springframework.core.io.Resource;
@@ -22,4 +23,6 @@ public interface BookService {
     UploadResult uploadCover(MultipartFile file);
 
     Resource viewCover(String filename);
+
+    List<BookSales> getSales();
 }

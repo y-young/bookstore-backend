@@ -2,6 +2,7 @@ package com.yyoung.bookstore.serviceImpl;
 
 import com.yyoung.bookstore.dao.BookDao;
 import com.yyoung.bookstore.dto.BookDto;
+import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
@@ -97,5 +98,9 @@ public class BookServiceImpl implements BookService {
             throw new ResourceNotFoundException();
         }
         return image;
+    }
+
+    public List<BookSales> getSales() {
+        return bookDao.getSales();
     }
 }

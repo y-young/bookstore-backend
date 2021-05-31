@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.controller;
 
 import com.yyoung.bookstore.dto.BookDto;
+import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.Book;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.net.URLConnection;
 import java.util.List;
 
@@ -77,5 +77,12 @@ public class BookController {
         Resource image = bookService.viewCover(filename);
         String fileType = URLConnection.guessContentTypeFromName(image.getFilename());
         return ResponseEntity.ok().contentType(MediaType.valueOf(fileType)).body(image);
+    }
+
+    @ApiOperation("统计销量")
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/sales")
+    public DataResponse<List<BookSales>> getSales() {
+        return new DataResponse<>(bookService.getSales());
     }
 }
