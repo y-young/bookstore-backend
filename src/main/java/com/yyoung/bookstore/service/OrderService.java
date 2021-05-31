@@ -1,5 +1,6 @@
 package com.yyoung.bookstore.service;
 
+import com.yyoung.bookstore.dto.BookTypeCount;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.Order;
 
@@ -11,4 +12,6 @@ public interface OrderService {
     Order viewOrder(Integer orderId);
 
     List<Order> viewMyOrders();
+
+    List<BookTypeCount> getMyStatistics();
 }

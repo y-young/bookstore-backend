@@ -1,5 +1,6 @@
 package com.yyoung.bookstore.controller;
 
+import com.yyoung.bookstore.dto.BookTypeCount;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.Order;
@@ -37,5 +38,11 @@ public class OrderController {
     @GetMapping("/my")
     public DataResponse<List<Order>> viewMyOrders() {
         return new DataResponse<>(orderService.viewMyOrders());
+    }
+
+    @ApiOperation("查看当前用户购书情况")
+    @GetMapping("/my/statistics")
+    public DataResponse<List<BookTypeCount>> getMyStatistics() {
+        return new DataResponse<>(orderService.getMyStatistics());
     }
 }

@@ -2,6 +2,7 @@ package com.yyoung.bookstore.serviceImpl;
 
 import com.yyoung.bookstore.dao.BookDao;
 import com.yyoung.bookstore.dao.OrderDao;
+import com.yyoung.bookstore.dto.BookTypeCount;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.entity.Order;
@@ -53,5 +54,10 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> viewMyOrders() {
         User user = userService.getCurrentUser();
         return orderDao.getUserOrders(user.getId());
+    }
+
+    public List<BookTypeCount> getMyStatistics() {
+        User user = userService.getCurrentUser();
+        return orderDao.getUserStatistics(user.getId());
     }
 }
