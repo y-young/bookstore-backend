@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @Api("书籍")
@@ -82,7 +84,7 @@ public class BookController {
     @ApiOperation("统计销量")
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/sales")
-    public DataResponse<List<BookSales>> getSales() {
-        return new DataResponse<>(bookService.getSales());
+    public DataResponse<List<BookSales>> getSales(@RequestParam(value = "start", required = false) Optional<Date> start, @RequestParam(value = "end", required = false) Optional<Date> end) {
+        return new DataResponse<>(bookService.getSales(start, end));
     }
 }

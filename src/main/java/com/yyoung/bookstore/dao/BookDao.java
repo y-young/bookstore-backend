@@ -3,7 +3,9 @@ package com.yyoung.bookstore.dao;
 import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.entity.Book;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookDao {
     Book findById(Integer bookId);
@@ -18,5 +20,5 @@ public interface BookDao {
 
     Book updateOne(Book book);
 
-    List<BookSales> getSales();
+    List<BookSales> getSales(Optional<Date> start, Optional<Date> end);
 }

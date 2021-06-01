@@ -26,7 +26,9 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -100,7 +102,12 @@ public class BookServiceImpl implements BookService {
         return image;
     }
 
-    public List<BookSales> getSales() {
-        return bookDao.getSales();
+    public List<BookSales> getSales(Optional<Date> start, Optional<Date> end) {
+        boolean hasStart = start.isPresent(), hasEnd = end.isPresent();
+        // If there's a date range, it must be bounded
+        if (hasStart && !hasEnd || !hasStart && hasEnd) {
+            throw new ValidationException("请选择日期范围");
+        }
+        return bookDao.getSales(start, end);
     }
 }

@@ -6,14 +6,15 @@ import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookDaoImpl implements BookDao {
     private final BookRepository bookRepository;
@@ -43,7 +44,10 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.save(book);
     }
 
-    public List<BookSales> getSales() {
+    public List<BookSales> getSales(Optional<Date> start, Optional<Date> end) {
+        if (start.isPresent() && end.isPresent()) {
+            return bookRepository.getSalesBetween(start.get(), end.get());
+        }
         return bookRepository.getSales();
     }
 }
