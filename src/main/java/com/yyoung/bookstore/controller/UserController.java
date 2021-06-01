@@ -18,7 +18,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -68,7 +70,7 @@ public class UserController {
     @ApiOperation("查看用户消费榜")
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/rank")
-    public DataResponse<List<UserConsumption>> getRank() {
-        return new DataResponse<>(userService.getRank());
+    public DataResponse<List<UserConsumption>> getRank(@RequestParam(value = "start", required = false) Optional<Date> start, @RequestParam(value = "end", required = false) Optional<Date> end) {
+        return new DataResponse<>(userService.getRank(start, end));
     }
 }

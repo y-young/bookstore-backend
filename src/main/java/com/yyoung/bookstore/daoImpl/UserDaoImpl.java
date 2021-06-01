@@ -11,7 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -48,7 +50,10 @@ public class UserDaoImpl implements UserDao {
         userRepository.save(user);
     }
 
-    public List<UserConsumption> getRank() {
+    public List<UserConsumption> getRank(Optional<Date> start, Optional<Date> end) {
+        if (start.isPresent() && end.isPresent()) {
+            return userRepository.getRankBetween(start.get(), end.get());
+        }
         return userRepository.getRank();
     }
 }

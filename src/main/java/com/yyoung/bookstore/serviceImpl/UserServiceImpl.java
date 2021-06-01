@@ -19,7 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,7 +85,7 @@ public class UserServiceImpl implements UserService {
         userDao.enableById(userId);
     }
 
-    public List<UserConsumption> getRank() {
-        return userDao.getRank();
+    public List<UserConsumption> getRank(Optional<Date> start, Optional<Date> end) {
+        return userDao.getRank(start, end);
     }
 }

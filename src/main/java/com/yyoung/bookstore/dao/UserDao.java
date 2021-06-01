@@ -4,7 +4,9 @@ import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.dto.UserConsumption;
 import com.yyoung.bookstore.entity.User;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao {
     List<User> getAll();
@@ -19,5 +21,5 @@ public interface UserDao {
 
     void enableById(Integer userId);
 
-    List<UserConsumption> getRank();
+    List<UserConsumption> getRank(Optional<Date> start, Optional<Date> end);
 }
