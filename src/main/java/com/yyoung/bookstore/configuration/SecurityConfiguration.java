@@ -38,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(SecurityConstants.PUBLIC_ROUTES).permitAll()
                 .antMatchers(SecurityConstants.SWAGGER_WHITELIST).permitAll()
                 .antMatchers(HttpMethod.GET, "/books").permitAll()
-                .antMatchers(HttpMethod.GET, "/books/{bookId}").permitAll()
+                .antMatchers(HttpMethod.GET, "/books/{bookId:\\d+}").permitAll()
                 .antMatchers(HttpMethod.GET, "/books/cover/{filename}").permitAll()
                 .anyRequest().authenticated()
                 .and()
