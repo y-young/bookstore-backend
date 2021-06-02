@@ -7,6 +7,7 @@ import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.service.BookService;
+import com.yyoung.bookstore.utils.Helpers;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class BookServiceImpl implements BookService {
 
     public Page<Book> findAll(String keyword, Pageable pageable) {
         if (keyword != null) {
-            return bookDao.findByKeyword(keyword, pageable);
+            return bookDao.findAll(keyword, pageable);
         }
         return bookDao.findAll(pageable);
     }
@@ -107,11 +108,9 @@ public class BookServiceImpl implements BookService {
     }
 
     public List<BookSales> getSales(Date start, Date end) {
-        boolean hasStart = start != null, hasEnd = end != null;
-        // If there's a date range, it must be bounded
-        if (hasStart && !hasEnd || !hasStart && hasEnd) {
-            throw new ValidationException("请选择日期范围");
+        if (Helpers.hasDateRange(start, end)) {
+            return bookDao.getSales(start, end);
         }
-        return bookDao.getSales(start, end);
+        return bookDao.getSales();
     }
 }

@@ -27,7 +27,7 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findAll(pageable);
     }
 
-    public Page<Book> findByKeyword(String keyword, Pageable pageable) {
+    public Page<Book> findAll(String keyword, Pageable pageable) {
         return bookRepository.findByTitleContains(keyword, pageable);
     }
 
@@ -48,10 +48,11 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.save(book);
     }
 
-    public List<BookSales> getSales(Date start, Date end) {
-        if (start != null && end != null) {
-            return bookRepository.getSalesBetween(start, end);
-        }
+    public List<BookSales> getSales() {
         return bookRepository.getSales();
+    }
+
+    public List<BookSales> getSales(Date start, Date end) {
+        return bookRepository.getSalesBetween(start, end);
     }
 }

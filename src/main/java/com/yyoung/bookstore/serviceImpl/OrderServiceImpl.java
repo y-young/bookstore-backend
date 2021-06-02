@@ -11,11 +11,14 @@ import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
 import com.yyoung.bookstore.service.OrderService;
 import com.yyoung.bookstore.service.UserService;
+import com.yyoung.bookstore.utils.Helpers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ValidationException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,7 +28,10 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final UserService userService;
 
-    public List<Order> viewAllOrders() {
+    public List<Order> viewAllOrders(Date start, Date end) {
+        if (Helpers.hasDateRange(start, end)) {
+            return orderDao.getAllOrders(start, end);
+        }
         return orderDao.getAllOrders();
     }
 
@@ -58,17 +64,23 @@ public class OrderServiceImpl implements OrderService {
         if (user.getRole().equals(Role.admin)) { // Administrators can view orders of all users
             return orderDao.getOrder(orderId);
         } else { // While normal users can only view their own ones
-            return orderDao.getOrder(orderId, user.getId());
+            return orderDao.getUserOrder(orderId, user.getId());
         }
     }
 
-    public List<Order> viewMyOrders() {
+    public List<Order> viewMyOrders(Date start, Date end) {
         User user = userService.getCurrentUser();
+        if (Helpers.hasDateRange(start, end)) {
+            return orderDao.getUserOrders(user.getId(), start, end);
+        }
         return orderDao.getUserOrders(user.getId());
     }
 
-    public List<BookTypeCount> getMyStatistics() {
+    public List<BookTypeCount> getMyBookStatistics(Date start, Date end) {
         User user = userService.getCurrentUser();
-        return orderDao.getUserStatistics(user.getId());
+        if (Helpers.hasDateRange(start, end)) {
+            return orderDao.getUserBookStatistics(user.getId(), start, end);
+        }
+        return orderDao.getUserBookStatistics(user.getId());
     }
 }

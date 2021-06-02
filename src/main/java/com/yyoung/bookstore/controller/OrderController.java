@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,8 +27,8 @@ public class OrderController {
     @ApiOperation("查看所有订单")
     @Secured({"ROLE_ADMIN"})
     @GetMapping
-    public DataResponse<List<Order>> viewAllOrders() {
-        return new DataResponse<>(orderService.viewAllOrders());
+    public DataResponse<List<Order>> viewAllOrders(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
+        return new DataResponse<>(orderService.viewAllOrders(start, end));
     }
 
     @ApiOperation("提交订单")
@@ -45,13 +46,13 @@ public class OrderController {
 
     @ApiOperation("查看当前用户的所有订单")
     @GetMapping("/my")
-    public DataResponse<List<Order>> viewMyOrders() {
-        return new DataResponse<>(orderService.viewMyOrders());
+    public DataResponse<List<Order>> viewMyOrders(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
+        return new DataResponse<>(orderService.viewMyOrders(start, end));
     }
 
     @ApiOperation("查看当前用户购书情况")
     @GetMapping("/my/statistics")
-    public DataResponse<List<BookTypeCount>> getMyStatistics() {
-        return new DataResponse<>(orderService.getMyStatistics());
+    public DataResponse<List<BookTypeCount>> getMyStatistics(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
+        return new DataResponse<>(orderService.getMyBookStatistics(start, end));
     }
 }

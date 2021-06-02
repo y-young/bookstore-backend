@@ -13,7 +13,7 @@ public interface BookDao {
 
     Page<Book> findAll(Pageable pageable);
 
-    Page<Book> findByKeyword(String keyword, Pageable pageable);
+    Page<Book> findAll(String keyword, Pageable pageable);
 
     void deductStock(Book book, Integer amount);
 
@@ -22,6 +22,8 @@ public interface BookDao {
     void deleteOne(Integer bookId);
 
     Book updateOne(Book book);
+
+    List<BookSales> getSales();
 
     List<BookSales> getSales(Date start, Date end);
 }

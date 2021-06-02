@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -18,6 +19,10 @@ public class OrderDaoImpl implements OrderDao {
 
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    public List<Order> getAllOrders(Date start, Date end) {
+        return orderRepository.findByTimeBetween(start, end);
     }
 
     public Order addOrder(Order order) {
@@ -30,7 +35,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     // Get the order of orderId where user_id = userId, along with access control
-    public Order getOrder(Integer orderId, Integer userId) {
+    public Order getUserOrder(Integer orderId, Integer userId) {
         return orderRepository.findByIdAndUserId(orderId, userId).orElseThrow(ResourceNotFoundException::new);
     }
 
@@ -38,7 +43,15 @@ public class OrderDaoImpl implements OrderDao {
         return orderRepository.findByUserId(userId);
     }
 
-    public List<BookTypeCount> getUserStatistics(Integer userId) {
-        return orderRepository.getUserStatistics(userId);
+    public List<Order> getUserOrders(Integer userId, Date start, Date end) {
+        return orderRepository.findByUserIdAndTimeBetween(userId, start, end);
+    }
+
+    public List<BookTypeCount> getUserBookStatistics(Integer userId) {
+        return orderRepository.getUserBookStatistics(userId);
+    }
+
+    public List<BookTypeCount> getUserBookStatistics(Integer userId, Date start, Date end) {
+        return orderRepository.getUserBookStatisticsBetween(userId, start, end);
     }
 }
