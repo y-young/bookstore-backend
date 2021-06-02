@@ -5,14 +5,15 @@ import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.entity.Book;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface BookService {
-    List<Book> findAll();
+    Page<Book> findAll(String keyword, Pageable pageable);
 
     Book findById(Integer bookId);
 
@@ -26,5 +27,5 @@ public interface BookService {
 
     Resource viewCover(String filename);
 
-    List<BookSales> getSales(Optional<Date> start, Optional<Date> end);
+    List<BookSales> getSales(Date start, Date end);
 }

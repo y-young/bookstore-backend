@@ -7,12 +7,12 @@ import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -23,8 +23,12 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findById(bookId).orElseThrow(ResourceNotFoundException::new);
     }
 
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public Page<Book> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable);
+    }
+
+    public Page<Book> findByKeyword(String keyword, Pageable pageable) {
+        return bookRepository.findByTitleContains(keyword, pageable);
     }
 
     public void deductStock(Book book, Integer amount) {
@@ -44,9 +48,9 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.save(book);
     }
 
-    public List<BookSales> getSales(Optional<Date> start, Optional<Date> end) {
-        if (start.isPresent() && end.isPresent()) {
-            return bookRepository.getSalesBetween(start.get(), end.get());
+    public List<BookSales> getSales(Date start, Date end) {
+        if (start != null && end != null) {
+            return bookRepository.getSalesBetween(start, end);
         }
         return bookRepository.getSales();
     }

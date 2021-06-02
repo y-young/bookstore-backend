@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,6 @@ import javax.validation.Valid;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Api("书籍")
@@ -33,8 +34,8 @@ public class BookController {
 
     @ApiOperation("获取所有书籍列表")
     @GetMapping
-    public DataResponse<List<Book>> listBooks() {
-        return new DataResponse<>(bookService.findAll());
+    public DataResponse<Page<Book>> listBooks(@RequestParam(value = "keyword", required = false) String keyword, Pageable pageable) {
+        return new DataResponse<>(bookService.findAll(keyword, pageable));
     }
 
     @ApiOperation("获取指定书籍信息")
@@ -84,7 +85,7 @@ public class BookController {
     @ApiOperation("统计销量")
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/sales")
-    public DataResponse<List<BookSales>> getSales(@RequestParam(value = "start", required = false) Optional<Date> start, @RequestParam(value = "end", required = false) Optional<Date> end) {
+    public DataResponse<List<BookSales>> getSales(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
         return new DataResponse<>(bookService.getSales(start, end));
     }
 }

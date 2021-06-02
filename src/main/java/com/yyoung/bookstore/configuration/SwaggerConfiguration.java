@@ -2,9 +2,11 @@ package com.yyoung.bookstore.configuration;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.yyoung.bookstore.constants.SecurityConstants;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -17,6 +19,20 @@ import springfox.documentation.spring.web.plugins.Docket;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+
+@Data
+class SwaggerPageable {
+    @ApiModelProperty(value = "Number of records per page", example = "10")
+    private Integer size;
+
+    @ApiModelProperty(value = "Page number", example = "0")
+    private Integer page;
+
+    @ApiModelProperty(
+            value = "Sorting criteria in the format: property(,asc|desc). Default sort order is ascending. Multiple sort criteria are supported."
+    )
+    private String sort;
+}
 
 @Configuration
 public class SwaggerConfiguration {
@@ -34,6 +50,7 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("com.yyoung.bookstore"))
                 .paths(PathSelectors.any())
                 .build()
+                .directModelSubstitute(Pageable.class, SwaggerPageable.class)
                 .consumes(new HashSet<>(Collections.singleton(MediaType.APPLICATION_JSON_VALUE)))
                 .produces(new HashSet<>(Collections.singleton(MediaType.APPLICATION_JSON_VALUE)))
                 .securityContexts(securityContext())
