@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -50,10 +49,19 @@ public class UserDaoImpl implements UserDao {
         userRepository.save(user);
     }
 
-    public List<UserConsumption> getRank(Optional<Date> start, Optional<Date> end) {
-        if (start.isPresent() && end.isPresent()) {
-            return userRepository.getRankBetween(start.get(), end.get());
-        }
+    public List<UserConsumption> getRank() {
         return userRepository.getRank();
+    }
+
+    public List<UserConsumption> getRank(Date start, Date end) {
+        return userRepository.getRank(start, end);
+    }
+
+    public UserConsumption getUserStatistics(Integer userId) {
+        return userRepository.getUserStatistics(userId);
+    }
+
+    public UserConsumption getUserStatistics(Integer userId, Date start, Date end) {
+        return userRepository.getUserStatistics(userId, start, end);
     }
 }

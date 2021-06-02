@@ -9,6 +9,7 @@ import com.yyoung.bookstore.entity.AuthUser;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
 import com.yyoung.bookstore.service.UserService;
+import com.yyoung.bookstore.utils.Helpers;
 import com.yyoung.bookstore.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,7 +85,18 @@ public class UserServiceImpl implements UserService {
         userDao.enableById(userId);
     }
 
-    public List<UserConsumption> getRank(Optional<Date> start, Optional<Date> end) {
-        return userDao.getRank(start, end);
+    public List<UserConsumption> getRank(Date start, Date end) {
+        if (Helpers.hasDateRange(start, end)) {
+            return userDao.getRank(start, end);
+        }
+        return userDao.getRank();
+    }
+
+    public UserConsumption getMyStatistics(Date start, Date end) {
+        User user = getCurrentUser();
+        if (Helpers.hasDateRange(start, end)) {
+            return userDao.getUserStatistics(user.getId(), start, end);
+        }
+        return userDao.getUserStatistics(user.getId());
     }
 }

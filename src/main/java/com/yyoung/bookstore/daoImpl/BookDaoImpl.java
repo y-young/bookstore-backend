@@ -53,6 +53,6 @@ public class BookDaoImpl implements BookDao {
     }
 
     public List<BookSales> getSales(Date start, Date end) {
-        return bookRepository.getSalesBetween(start, end);
+        return bookRepository.getSales(start, end);
     }
 }

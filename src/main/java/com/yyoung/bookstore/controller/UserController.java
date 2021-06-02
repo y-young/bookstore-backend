@@ -69,8 +69,14 @@ public class UserController {
 
     @ApiOperation("查看用户消费榜")
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("/rank")
-    public DataResponse<List<UserConsumption>> getRank(@RequestParam(value = "start", required = false) Optional<Date> start, @RequestParam(value = "end", required = false) Optional<Date> end) {
+    @GetMapping("/statistics")
+    public DataResponse<List<UserConsumption>> getRank(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
         return new DataResponse<>(userService.getRank(start, end));
+    }
+
+    @ApiOperation("查看本人消费情况")
+    @GetMapping("/my/statistics")
+    public DataResponse<UserConsumption> getMyStatistics(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
+        return new DataResponse<>(userService.getMyStatistics(start, end));
     }
 }

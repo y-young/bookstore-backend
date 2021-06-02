@@ -25,5 +25,5 @@ public interface OrderRepository extends CrudRepository<Order, Integer> {
     List<BookTypeCount> getUserBookStatistics(Integer userId);
 
     @Query("select new com.yyoung.bookstore.dto.BookTypeCount(b.type, sum(oi.amount)) from Order o join o.items oi join oi.book b where o.user.id = :userId and o.time between :start and :end group by b.type order by sum(oi.amount) desc")
-    List<BookTypeCount> getUserBookStatisticsBetween(Integer userId, Date start, Date end);
+    List<BookTypeCount> getUserBookStatistics(Integer userId, Date start, Date end);
 }

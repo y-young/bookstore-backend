@@ -52,6 +52,6 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     public List<BookTypeCount> getUserBookStatistics(Integer userId, Date start, Date end) {
-        return orderRepository.getUserBookStatisticsBetween(userId, start, end);
+        return orderRepository.getUserBookStatistics(userId, start, end);
     }
 }
