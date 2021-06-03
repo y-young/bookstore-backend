@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.service;
 
 import com.yyoung.bookstore.dto.BookTypeCount;
+import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.Order;
 
@@ -17,4 +18,6 @@ public interface OrderService {
     List<Order> viewMyOrders(Date start, Date end);
 
     List<BookTypeCount> getMyBookStatistics(Date start, Date end);
+
+    OrderStatistics getStatistics(Date start, Date end);
 }

@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.controller;
 
 import com.yyoung.bookstore.dto.BookTypeCount;
+import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.Order;
@@ -54,5 +55,12 @@ public class OrderController {
     @GetMapping("/my/statistics")
     public DataResponse<List<BookTypeCount>> getMyStatistics(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
         return new DataResponse<>(orderService.getMyBookStatistics(start, end));
+    }
+
+    @ApiOperation("查看订单统计信息")
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/statistics")
+    public DataResponse<OrderStatistics> getStatistics(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
+        return new DataResponse<>(orderService.getStatistics(start, end));
     }
 }

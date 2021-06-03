@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.dao;
 
 import com.yyoung.bookstore.dto.BookTypeCount;
+import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.Order;
 
 import java.util.Date;
@@ -24,4 +25,8 @@ public interface OrderDao {
     List<BookTypeCount> getUserBookStatistics(Integer userId);
 
     List<BookTypeCount> getUserBookStatistics(Integer userId, Date start, Date end);
+
+    OrderStatistics getStatistics();
+
+    OrderStatistics getStatistics(Date start, Date end);
 }

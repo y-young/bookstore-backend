@@ -2,6 +2,7 @@ package com.yyoung.bookstore.daoImpl;
 
 import com.yyoung.bookstore.dao.OrderDao;
 import com.yyoung.bookstore.dto.BookTypeCount;
+import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.OrderRepository;
@@ -53,5 +54,13 @@ public class OrderDaoImpl implements OrderDao {
 
     public List<BookTypeCount> getUserBookStatistics(Integer userId, Date start, Date end) {
         return orderRepository.getUserBookStatistics(userId, start, end);
+    }
+
+    public OrderStatistics getStatistics() {
+        return orderRepository.getStatistics();
+    }
+    
+    public OrderStatistics getStatistics(Date start, Date end) {
+        return orderRepository.getStatistics(start, end);
     }
 }

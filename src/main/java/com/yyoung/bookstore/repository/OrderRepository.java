@@ -1,6 +1,8 @@
 package com.yyoung.bookstore.repository;
 
 import com.yyoung.bookstore.dto.BookTypeCount;
+import com.yyoung.bookstore.dto.OrderStatistics;
+import com.yyoung.bookstore.dto.UserConsumption;
 import com.yyoung.bookstore.entity.Order;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -26,4 +28,10 @@ public interface OrderRepository extends CrudRepository<Order, Integer> {
 
     @Query("select new com.yyoung.bookstore.dto.BookTypeCount(b.type, sum(oi.amount)) from Order o join o.items oi join oi.book b where o.user.id = :userId and o.time between :start and :end group by b.type order by sum(oi.amount) desc")
     List<BookTypeCount> getUserBookStatistics(Integer userId, Date start, Date end);
+
+    @Query("select new com.yyoung.bookstore.dto.OrderStatistics(count(o), sum(o.totalAmount), sum(o.total)) from Order o")
+    OrderStatistics getStatistics();
+
+    @Query("select new com.yyoung.bookstore.dto.OrderStatistics(count(o), sum(o.totalAmount), sum(o.total)) from Order o where o.time between :start and :end")
+    OrderStatistics getStatistics(Date start, Date end);
 }

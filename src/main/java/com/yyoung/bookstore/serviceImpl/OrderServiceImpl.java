@@ -4,6 +4,7 @@ import com.yyoung.bookstore.constants.Role;
 import com.yyoung.bookstore.dao.BookDao;
 import com.yyoung.bookstore.dao.OrderDao;
 import com.yyoung.bookstore.dto.BookTypeCount;
+import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.entity.Order;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ValidationException;
 import java.util.Date;
 import java.util.List;
 
@@ -82,5 +82,12 @@ public class OrderServiceImpl implements OrderService {
             return orderDao.getUserBookStatistics(user.getId(), start, end);
         }
         return orderDao.getUserBookStatistics(user.getId());
+    }
+
+    public OrderStatistics getStatistics(Date start, Date end) {
+        if (Helpers.hasDateRange(start, end)) {
+            return orderDao.getStatistics(start, end);
+        }
+        return orderDao.getStatistics();
     }
 }
