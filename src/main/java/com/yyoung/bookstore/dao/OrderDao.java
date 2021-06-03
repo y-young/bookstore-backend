@@ -10,7 +10,11 @@ import java.util.List;
 public interface OrderDao {
     List<Order> getAllOrders();
 
+    List<Order> getAllOrders(String bookTitle);
+
     List<Order> getAllOrders(Date start, Date end);
+
+    List<Order> getAllOrders(String bookTitle, Date start, Date end);
 
     Order addOrder(Order order);
 
@@ -20,7 +24,11 @@ public interface OrderDao {
 
     List<Order> getUserOrders(Integer userId);
 
+    List<Order> getUserOrders(Integer userId, String bookTitle);
+
     List<Order> getUserOrders(Integer userId, Date start, Date end);
+
+    List<Order> getUserOrders(Integer userId, String bookTitle, Date start, Date end);
 
     List<BookTypeCount> getUserBookStatistics(Integer userId);
 

@@ -22,8 +22,16 @@ public class OrderDaoImpl implements OrderDao {
         return orderRepository.findAll();
     }
 
+    public List<Order> getAllOrders(String bookTitle) {
+        return orderRepository.findByItemsBookTitleContains(bookTitle);
+    }
+
     public List<Order> getAllOrders(Date start, Date end) {
         return orderRepository.findByTimeBetween(start, end);
+    }
+
+    public List<Order> getAllOrders(String bookTitle, Date start, Date end) {
+        return orderRepository.findByItemsBookTitleContainsAndTimeBetween(bookTitle, start, end);
     }
 
     public Order addOrder(Order order) {
@@ -44,8 +52,16 @@ public class OrderDaoImpl implements OrderDao {
         return orderRepository.findByUserId(userId);
     }
 
+    public List<Order> getUserOrders(Integer userId, String bookTitle) {
+        return orderRepository.findByUserIdAndItemsBookTitleContains(userId, bookTitle);
+    }
+
     public List<Order> getUserOrders(Integer userId, Date start, Date end) {
         return orderRepository.findByUserIdAndTimeBetween(userId, start, end);
+    }
+
+    public List<Order> getUserOrders(Integer userId, String bookTitle, Date start, Date end) {
+        return orderRepository.findByUserIdAndItemsBookTitleContainsAndTimeBetween(userId, bookTitle, start, end);
     }
 
     public List<BookTypeCount> getUserBookStatistics(Integer userId) {
@@ -59,7 +75,7 @@ public class OrderDaoImpl implements OrderDao {
     public OrderStatistics getStatistics() {
         return orderRepository.getStatistics();
     }
-    
+
     public OrderStatistics getStatistics(Date start, Date end) {
         return orderRepository.getStatistics(start, end);
     }

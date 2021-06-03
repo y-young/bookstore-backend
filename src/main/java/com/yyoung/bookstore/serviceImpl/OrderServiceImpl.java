@@ -28,7 +28,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final UserService userService;
 
-    public List<Order> viewAllOrders(Date start, Date end) {
+    public List<Order> viewAllOrders(String bookTitle, Date start, Date end) {
+        if (bookTitle != null && !bookTitle.isEmpty()) {
+            if (Helpers.hasDateRange(start, end)) {
+                return orderDao.getAllOrders(bookTitle, start, end);
+            }
+            return orderDao.getAllOrders(bookTitle);
+        }
         if (Helpers.hasDateRange(start, end)) {
             return orderDao.getAllOrders(start, end);
         }
@@ -68,10 +74,16 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public List<Order> viewMyOrders(Date start, Date end) {
+    public List<Order> viewMyOrders(String bookTitle, Date start, Date end) {
         User user = userService.getCurrentUser();
+        if (bookTitle != null && !bookTitle.isEmpty()) {
+            if (Helpers.hasDateRange(start, end)) {
+                return orderDao.getUserOrders(user.getId(), bookTitle, start, end);
+            }
+            return orderDao.getAllOrders(bookTitle);
+        }
         if (Helpers.hasDateRange(start, end)) {
-            return orderDao.getUserOrders(user.getId(), start, end);
+            return orderDao.getAllOrders(start, end);
         }
         return orderDao.getUserOrders(user.getId());
     }

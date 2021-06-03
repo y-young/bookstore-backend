@@ -9,13 +9,13 @@ import java.util.Date;
 import java.util.List;
 
 public interface OrderService {
-    List<Order> viewAllOrders(Date start, Date end);
+    List<Order> viewAllOrders(String bookTitle, Date start, Date end);
 
     Order placeOrder(List<OrderItem> items);
 
     Order viewOrder(Integer orderId);
 
-    List<Order> viewMyOrders(Date start, Date end);
+    List<Order> viewMyOrders(String bookTitle, Date start, Date end);
 
     List<BookTypeCount> getMyBookStatistics(Date start, Date end);
 

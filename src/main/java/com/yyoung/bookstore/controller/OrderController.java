@@ -28,8 +28,8 @@ public class OrderController {
     @ApiOperation("查看所有订单")
     @Secured({"ROLE_ADMIN"})
     @GetMapping
-    public DataResponse<List<Order>> viewAllOrders(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
-        return new DataResponse<>(orderService.viewAllOrders(start, end));
+    public DataResponse<List<Order>> viewAllOrders(@RequestParam(value = "bookTitle", required = false) String bookTitle, @RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
+        return new DataResponse<>(orderService.viewAllOrders(bookTitle, start, end));
     }
 
     @ApiOperation("提交订单")
@@ -47,8 +47,8 @@ public class OrderController {
 
     @ApiOperation("查看当前用户的所有订单")
     @GetMapping("/my")
-    public DataResponse<List<Order>> viewMyOrders(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
-        return new DataResponse<>(orderService.viewMyOrders(start, end));
+    public DataResponse<List<Order>> viewMyOrders(@RequestParam(value = "bookTitle", required = false) String bookTitle, @RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
+        return new DataResponse<>(orderService.viewMyOrders(bookTitle, start, end));
     }
 
     @ApiOperation("查看当前用户购书情况")
