@@ -1,10 +1,7 @@
 package com.yyoung.bookstore.controller;
 
 import com.yyoung.bookstore.constants.SecurityConstants;
-import com.yyoung.bookstore.dto.AuthResult;
-import com.yyoung.bookstore.dto.LoginCredentials;
-import com.yyoung.bookstore.dto.NewUser;
-import com.yyoung.bookstore.dto.UserConsumption;
+import com.yyoung.bookstore.dto.*;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.service.UserService;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -30,7 +26,7 @@ public class UserController {
 
     @ApiOperation("登录")
     @PostMapping("/login")
-    public ResponseEntity<DataResponse<AuthResult>> login(@RequestBody LoginCredentials loginCredentials) {
+    public ResponseEntity<DataResponse<AuthResult>> login(@Valid @RequestBody LoginCredentials loginCredentials) {
         AuthResult authResult = userService.login(loginCredentials);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(SecurityConstants.TOKEN_HEADER, authResult.getAuthorization());
@@ -78,5 +74,12 @@ public class UserController {
     @GetMapping("/my/statistics")
     public DataResponse<UserConsumption> getMyStatistics(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
         return new DataResponse<>(userService.getMyStatistics(start, end));
+    }
+
+    @ApiOperation("修改密码")
+    @PutMapping("/password")
+    public ResponseEntity<?> updatePassword(@Valid @RequestBody PasswordUpdateRequest request) {
+        userService.updatePassword(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

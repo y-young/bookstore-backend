@@ -1,6 +1,5 @@
 package com.yyoung.bookstore.dao;
 
-import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.dto.UserConsumption;
 import com.yyoung.bookstore.entity.User;
 
@@ -12,13 +11,11 @@ public interface UserDao {
 
     User findByUsername(String username);
 
-    void save(NewUser newUser);
+    void save(User user);
 
     boolean existsByUsername(String username);
 
-    void disableById(Integer userId);
-
-    void enableById(Integer userId);
+    User findById(Integer userId);
 
     List<UserConsumption> getRank();
 

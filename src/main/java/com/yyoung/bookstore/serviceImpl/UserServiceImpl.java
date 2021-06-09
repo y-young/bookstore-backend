@@ -1,17 +1,14 @@
 package com.yyoung.bookstore.serviceImpl;
 
 import com.yyoung.bookstore.dao.UserDao;
-import com.yyoung.bookstore.dto.AuthResult;
-import com.yyoung.bookstore.dto.LoginCredentials;
-import com.yyoung.bookstore.dto.NewUser;
-import com.yyoung.bookstore.dto.UserConsumption;
-import com.yyoung.bookstore.dto.AuthUser;
+import com.yyoung.bookstore.dto.*;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
 import com.yyoung.bookstore.service.UserService;
 import com.yyoung.bookstore.utils.Helpers;
 import com.yyoung.bookstore.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -29,13 +26,10 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ModelMapper modelMapper;
 
     public List<User> getAll() {
         return userDao.getAll();
-    }
-
-    public User findByUsername(String username) {
-        return userDao.findByUsername(username);
     }
 
     public boolean checkPassword(String inputPassword, String userPassword) {
@@ -47,11 +41,12 @@ public class UserServiceImpl implements UserService {
             throw new BusinessLogicException("用户名已存在");
         }
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        userDao.save(newUser);
+        User user = modelMapper.map(newUser, User.class);
+        userDao.save(user);
     }
 
     public AuthResult login(LoginCredentials loginRequest) {
-        User user = findByUsername(loginRequest.getUsername());
+        User user = userDao.findByUsername(loginRequest.getUsername());
         if (user == null || !checkPassword(loginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("用户名或密码错误");
         }
@@ -74,15 +69,19 @@ public class UserServiceImpl implements UserService {
     }
 
     public void disableUser(Integer userId) {
-        User user = getCurrentUser();
-        if (userId.equals(user.getId())) {
+        User currentUser = getCurrentUser();
+        if (userId.equals(currentUser.getId())) {
             throw new BusinessLogicException("不允许禁用当前用户");
         }
-        userDao.disableById(userId);
+        User user = userDao.findById(userId);
+        user.setDisabled(true);
+        userDao.save(user);
     }
 
     public void enableUser(Integer userId) {
-        userDao.enableById(userId);
+        User user = userDao.findById(userId);
+        user.setDisabled(false);
+        userDao.save(user);
     }
 
     public List<UserConsumption> getRank(Date start, Date end) {
@@ -98,5 +97,14 @@ public class UserServiceImpl implements UserService {
             return userDao.getUserStatistics(user.getId(), start, end);
         }
         return userDao.getUserStatistics(user.getId());
+    }
+
+    public void updatePassword(PasswordUpdateRequest request) {
+        User user = getCurrentUser();
+        if (!checkPassword(request.getCurrentPassword(), user.getPassword())) {
+            throw new BusinessLogicException("当前密码不正确");
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        userDao.save(user);
     }
 }

@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.validation;
 
-import com.yyoung.bookstore.dto.NewUser;
+import lombok.Data;
+import org.modelmapper.ModelMapper;
 
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
@@ -20,8 +21,15 @@ public @interface PasswordsEqualConstraint {
     Class<? extends Payload>[] payload() default {};
 }
 
+@Data
+class TargetObject {
+    private String password;
+    private String confirmPassword;
+}
+
 class PasswordsEqualConstraintValidator implements
         ConstraintValidator<PasswordsEqualConstraint, Object> {
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public void initialize(PasswordsEqualConstraint arg0) {
@@ -29,7 +37,7 @@ class PasswordsEqualConstraintValidator implements
 
     @Override
     public boolean isValid(Object candidate, ConstraintValidatorContext arg1) {
-        NewUser user = (NewUser) candidate;
+        TargetObject user = modelMapper.map(candidate, TargetObject.class);
         return user.getPassword().equals(user.getConfirmPassword());
     }
 }
