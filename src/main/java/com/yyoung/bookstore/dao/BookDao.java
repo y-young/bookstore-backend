@@ -28,4 +28,8 @@ public interface BookDao {
     List<BookSales> getSales();
 
     List<BookSales> getSales(Date start, Date end);
+
+    List<Book> getLatest(Pageable pageable);
+
+    List<Book> getBestSales(Pageable pageable);
 }

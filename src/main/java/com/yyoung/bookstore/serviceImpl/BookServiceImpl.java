@@ -15,6 +15,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -123,5 +124,13 @@ public class BookServiceImpl implements BookService {
             return bookDao.getSales(start, end);
         }
         return bookDao.getSales();
+    }
+
+    public List<Book> getLatest() {
+        return bookDao.getLatest(PageRequest.of(0, 4));
+    }
+
+    public List<Book> getBestSales() {
+        return bookDao.getBestSales(PageRequest.of(0, 4));
     }
 }

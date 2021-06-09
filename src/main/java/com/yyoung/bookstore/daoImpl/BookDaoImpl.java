@@ -59,4 +59,12 @@ public class BookDaoImpl implements BookDao {
     public List<BookSales> getSales(Date start, Date end) {
         return bookRepository.getSales(start, end);
     }
+
+    public List<Book> getLatest(Pageable pageable) {
+        return bookRepository.findByDeletedIsFalseOrderByIdDesc(pageable);
+    }
+
+    public List<Book> getBestSales(Pageable pageable) {
+        return bookRepository.getBestSales(pageable);
+    }
 }

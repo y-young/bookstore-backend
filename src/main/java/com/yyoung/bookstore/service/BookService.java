@@ -30,4 +30,8 @@ public interface BookService {
     Resource viewCover(String filename);
 
     List<BookSales> getSales(Date start, Date end);
+
+    List<Book> getLatest();
+
+    List<Book> getBestSales();
 }

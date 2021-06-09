@@ -96,4 +96,16 @@ public class BookController {
     public DataResponse<List<BookSales>> getSales(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
         return new DataResponse<>(bookService.getSales(start, end));
     }
+
+    @ApiOperation("查看最新书籍")
+    @GetMapping("/latest")
+    public DataResponse<List<Book>> getLatestBooks() {
+        return new DataResponse<>(bookService.getLatest());
+    }
+
+    @ApiOperation("查看热销书籍")
+    @GetMapping("/bestSales")
+    public DataResponse<List<Book>> getBestSales() {
+        return new DataResponse<>(bookService.getBestSales());
+    }
 }
