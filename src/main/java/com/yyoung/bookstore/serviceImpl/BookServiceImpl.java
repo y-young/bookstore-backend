@@ -57,7 +57,18 @@ public class BookServiceImpl implements BookService {
     }
 
     public void deleteOne(Integer bookId) {
-        bookDao.deleteOne(bookId);
+        Book book = bookDao.findById(bookId);
+        book.setDeleted(true);
+        bookDao.updateOne(book);
+    }
+
+    public void deleteMany(List<Integer> bookIds) {
+        List<Book> books = bookDao.findByIdIn(bookIds);
+        for (Book book :
+                books) {
+            book.setDeleted(true);
+        }
+        bookDao.updateMany(books);
     }
 
     public Book updateOne(Integer bookId, BookDto book) {

@@ -21,6 +21,8 @@ public interface BookService {
 
     void deleteOne(Integer bookId);
 
+    void deleteMany(List<Integer> bookIds);
+
     Book updateOne(Integer bookId, BookDto book);
 
     UploadResult uploadCover(MultipartFile file);

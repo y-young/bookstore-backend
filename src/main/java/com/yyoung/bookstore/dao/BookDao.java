@@ -15,13 +15,15 @@ public interface BookDao {
 
     Page<Book> findAll(String keyword, Pageable pageable);
 
+    List<Book> findByIdIn(List<Integer> bookIds);
+
     void deductStock(Book book, Integer amount);
 
     void addOne(Book book);
 
-    void deleteOne(Integer bookId);
-
     Book updateOne(Book book);
+
+    void updateMany(List<Book> books);
 
     List<BookSales> getSales();
 

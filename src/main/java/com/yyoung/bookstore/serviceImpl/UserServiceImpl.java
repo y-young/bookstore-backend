@@ -5,7 +5,7 @@ import com.yyoung.bookstore.dto.AuthResult;
 import com.yyoung.bookstore.dto.LoginCredentials;
 import com.yyoung.bookstore.dto.NewUser;
 import com.yyoung.bookstore.dto.UserConsumption;
-import com.yyoung.bookstore.entity.AuthUser;
+import com.yyoung.bookstore.dto.AuthUser;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
 import com.yyoung.bookstore.service.UserService;

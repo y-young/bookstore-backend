@@ -60,6 +60,14 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @ApiOperation("批量删除书籍")
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteBooks(@RequestBody List<Integer> bookIds) {
+        bookService.deleteMany(bookIds);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @ApiOperation("修改书籍")
     @Secured({"ROLE_ADMIN"})
     @PutMapping("/{bookId}")

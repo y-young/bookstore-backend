@@ -50,6 +50,9 @@ public class OrderServiceImpl implements OrderService {
                 items) {
             Book book = bookDao.findById(item.getBook().getId());
             Integer amount = item.getAmount();
+            if (book.getDeleted()) {
+                throw new BusinessLogicException("商品已下架");
+            }
             if (book.getStock() < item.getAmount()) {
                 throw new BusinessLogicException("库存不足");
             }

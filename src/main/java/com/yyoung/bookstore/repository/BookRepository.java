@@ -14,11 +14,13 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends PagingAndSortingRepository<Book, Integer> {
-    Page<Book> findAll(Pageable pageable);
+    Page<Book> findByDeletedIsFalse(Pageable pageable);
 
-    Page<Book> findByTitleContains(String keyword, Pageable pageable);
+    Page<Book> findByTitleContainsAndDeletedIsFalse(String keyword, Pageable pageable);
 
     Optional<Book> findById(Integer bookId);
+
+    List<Book> findByIdIn(List<Integer> bookIds);
 
     @Query("select new com.yyoung.bookstore.dto.BookSales(b, sum(oi.amount)) from Order o inner join o.items oi inner join oi.book b group by b.id order by sum(oi.amount) desc")
     List<BookSales> getSales();

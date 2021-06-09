@@ -42,4 +42,8 @@ public class Book {
 
     @ApiModelProperty("封面图片路径")
     private String cover;
+
+    @Column(nullable = false)
+    @ApiModelProperty("是否下架")
+    private Boolean deleted = false;
 }

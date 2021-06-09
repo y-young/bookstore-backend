@@ -23,12 +23,16 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findById(bookId).orElseThrow(ResourceNotFoundException::new);
     }
 
+    public List<Book> findByIdIn(List<Integer> bookIds) {
+        return bookRepository.findByIdIn(bookIds);
+    }
+
     public Page<Book> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable);
+        return bookRepository.findByDeletedIsFalse(pageable);
     }
 
     public Page<Book> findAll(String keyword, Pageable pageable) {
-        return bookRepository.findByTitleContains(keyword, pageable);
+        return bookRepository.findByTitleContainsAndDeletedIsFalse(keyword, pageable);
     }
 
     public void deductStock(Book book, Integer amount) {
@@ -40,12 +44,12 @@ public class BookDaoImpl implements BookDao {
         bookRepository.save(book);
     }
 
-    public void deleteOne(Integer bookId) {
-        bookRepository.deleteById(bookId);
-    }
-
     public Book updateOne(Book book) {
         return bookRepository.save(book);
+    }
+
+    public void updateMany(List<Book> books) {
+        bookRepository.saveAll(books);
     }
 
     public List<BookSales> getSales() {
