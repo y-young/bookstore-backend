@@ -4,6 +4,7 @@ import com.yyoung.bookstore.dao.OrderDao;
 import com.yyoung.bookstore.dto.BookTypeCount;
 import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.Order;
+import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,24 +45,24 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     // Get the order of orderId where user_id = userId, along with access control
-    public Order getUserOrder(Integer orderId, Integer userId) {
-        return orderRepository.findByIdAndUserId(orderId, userId).orElseThrow(ResourceNotFoundException::new);
+    public Order getUserOrder(Integer orderId, User user) {
+        return orderRepository.findByIdAndUser(orderId, user).orElseThrow(ResourceNotFoundException::new);
     }
 
-    public List<Order> getUserOrders(Integer userId) {
-        return orderRepository.findByUserId(userId);
+    public List<Order> getUserOrders(User user) {
+        return orderRepository.findByUser(user);
     }
 
-    public List<Order> getUserOrders(Integer userId, String bookTitle) {
-        return orderRepository.findByUserIdAndItemsBookTitleContains(userId, bookTitle);
+    public List<Order> getUserOrders(User user, String bookTitle) {
+        return orderRepository.findDistinctByUserAndItemsBookTitleContains(user, bookTitle);
     }
 
-    public List<Order> getUserOrders(Integer userId, Date start, Date end) {
-        return orderRepository.findByUserIdAndTimeBetween(userId, start, end);
+    public List<Order> getUserOrders(User user, Date start, Date end) {
+        return orderRepository.findByUserAndTimeBetween(user, start, end);
     }
 
-    public List<Order> getUserOrders(Integer userId, String bookTitle, Date start, Date end) {
-        return orderRepository.findByUserIdAndItemsBookTitleContainsAndTimeBetween(userId, bookTitle, start, end);
+    public List<Order> getUserOrders(User user, String bookTitle, Date start, Date end) {
+        return orderRepository.findDistinctByUserAndItemsBookTitleContainsAndTimeBetween(user, bookTitle, start, end);
     }
 
     public List<BookTypeCount> getUserBookStatistics(Integer userId) {

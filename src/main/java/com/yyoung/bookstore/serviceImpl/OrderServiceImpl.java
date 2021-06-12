@@ -56,7 +56,8 @@ public class OrderServiceImpl implements OrderService {
             if (book.getStock() < item.getAmount()) {
                 throw new BusinessLogicException("库存不足");
             }
-            bookDao.deductStock(book, amount);
+            book.setStock(book.getStock() - amount);
+            bookDao.save(book);
             totalAmount += amount;
             total += book.getPrice() * amount;
             item.setBook(book);
@@ -73,7 +74,7 @@ public class OrderServiceImpl implements OrderService {
         if (user.getRole().equals(Role.admin)) { // Administrators can view orders of all users
             return orderDao.getOrder(orderId);
         } else { // While normal users can only view their own ones
-            return orderDao.getUserOrder(orderId, user.getId());
+            return orderDao.getUserOrder(orderId, user);
         }
     }
 
@@ -81,14 +82,14 @@ public class OrderServiceImpl implements OrderService {
         User user = userService.getCurrentUser();
         if (bookTitle != null && !bookTitle.isEmpty()) {
             if (Helpers.hasDateRange(start, end)) {
-                return orderDao.getUserOrders(user.getId(), bookTitle, start, end);
+                return orderDao.getUserOrders(user, bookTitle, start, end);
             }
-            return orderDao.getAllOrders(bookTitle);
+            return orderDao.getUserOrders(user, bookTitle);
         }
         if (Helpers.hasDateRange(start, end)) {
-            return orderDao.getAllOrders(start, end);
+            return orderDao.getUserOrders(user, start, end);
         }
-        return orderDao.getUserOrders(user.getId());
+        return orderDao.getUserOrders(user);
     }
 
     public List<BookTypeCount> getMyBookStatistics(Date start, Date end) {

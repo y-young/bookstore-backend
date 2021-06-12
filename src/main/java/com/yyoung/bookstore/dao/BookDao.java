@@ -32,4 +32,6 @@ public interface BookDao {
     List<Book> getLatest(Pageable pageable);
 
     List<Book> getBestSales(Pageable pageable);
+
+    void save(Book book);
 }

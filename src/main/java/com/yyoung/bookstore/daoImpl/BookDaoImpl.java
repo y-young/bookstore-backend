@@ -67,4 +67,8 @@ public class BookDaoImpl implements BookDao {
     public List<Book> getBestSales(Pageable pageable) {
         return bookRepository.getBestSales(pageable);
     }
+
+    public void save(Book book) {
+        bookRepository.save(book);
+    }
 }

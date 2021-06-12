@@ -3,6 +3,7 @@ package com.yyoung.bookstore.dao;
 import com.yyoung.bookstore.dto.BookTypeCount;
 import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.Order;
+import com.yyoung.bookstore.entity.User;
 
 import java.util.Date;
 import java.util.List;
@@ -20,15 +21,15 @@ public interface OrderDao {
 
     Order getOrder(Integer orderId);
 
-    Order getUserOrder(Integer orderId, Integer userId);
+    Order getUserOrder(Integer orderId, User user);
 
-    List<Order> getUserOrders(Integer userId);
+    List<Order> getUserOrders(User user);
 
-    List<Order> getUserOrders(Integer userId, String bookTitle);
+    List<Order> getUserOrders(User user, String bookTitle);
 
-    List<Order> getUserOrders(Integer userId, Date start, Date end);
+    List<Order> getUserOrders(User user, Date start, Date end);
 
-    List<Order> getUserOrders(Integer userId, String bookTitle, Date start, Date end);
+    List<Order> getUserOrders(User user, String bookTitle, Date start, Date end);
 
     List<BookTypeCount> getUserBookStatistics(Integer userId);
 
