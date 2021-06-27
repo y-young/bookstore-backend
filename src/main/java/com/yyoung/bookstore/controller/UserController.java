@@ -40,6 +40,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @ApiOperation("检查用户名唯一性")
+    @PostMapping("/register/checkUsername")
+    public DataResponse<Boolean> checkUsername(@RequestBody String username) {
+        return new DataResponse<>(userService.checkUsername(username));
+    }
+
     @ApiOperation("获取所有用户")
     @Secured({"ROLE_ADMIN"})
     @GetMapping

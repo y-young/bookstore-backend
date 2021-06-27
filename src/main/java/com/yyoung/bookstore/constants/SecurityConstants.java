@@ -19,6 +19,7 @@ public class SecurityConstants {
 
     public static final String[] PUBLIC_ROUTES = {
             "/users/register",
+            "/users/register/checkUsername",
             "/users/login",
             "/books/latest",
             "/books/bestSales"

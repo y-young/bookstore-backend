@@ -26,4 +26,6 @@ public interface UserService {
     UserConsumption getMyStatistics(Date start, Date end);
 
     void updatePassword(PasswordUpdateRequest request);
+
+    boolean checkUsername(String username);
 }

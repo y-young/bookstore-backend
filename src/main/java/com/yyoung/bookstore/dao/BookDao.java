@@ -17,8 +17,6 @@ public interface BookDao {
 
     List<Book> findByIdIn(List<Integer> bookIds);
 
-    void deductStock(Book book, Integer amount);
-
     void addOne(Book book);
 
     Book updateOne(Book book);

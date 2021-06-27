@@ -107,4 +107,8 @@ public class UserServiceImpl implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         userDao.save(user);
     }
+
+    public boolean checkUsername(String username) {
+        return !userDao.existsByUsername(username);
+    }
 }
