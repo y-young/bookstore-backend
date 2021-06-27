@@ -35,11 +35,6 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findByTitleContainsAndDeletedIsFalse(keyword, pageable);
     }
 
-    public void deductStock(Book book, Integer amount) {
-        book.setStock(book.getStock() - amount);
-        bookRepository.save(book);
-    }
-
     public void addOne(Book book) {
         bookRepository.save(book);
     }
