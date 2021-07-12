@@ -119,11 +119,11 @@ public class BookServiceImpl implements BookService {
         return image;
     }
 
-    public List<BookSales> getSales(Date start, Date end) {
+    public Page<BookSales> getSales(Date start, Date end, Pageable pageable) {
         if (Helpers.hasDateRange(start, end)) {
-            return bookDao.getSales(start, end);
+            return bookDao.getSales(start, end, pageable);
         }
-        return bookDao.getSales();
+        return bookDao.getSales(pageable);
     }
 
     public List<Book> getLatest() {

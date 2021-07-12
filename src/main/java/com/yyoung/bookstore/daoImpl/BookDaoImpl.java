@@ -47,12 +47,12 @@ public class BookDaoImpl implements BookDao {
         bookRepository.saveAll(books);
     }
 
-    public List<BookSales> getSales() {
-        return bookRepository.getSales();
+    public Page<BookSales> getSales(Pageable pageable) {
+        return bookRepository.getSales(pageable);
     }
 
-    public List<BookSales> getSales(Date start, Date end) {
-        return bookRepository.getSales(start, end);
+    public Page<BookSales> getSales(Date start, Date end, Pageable pageable) {
+        return bookRepository.getSales(start, end, pageable);
     }
 
     public List<Book> getLatest(Pageable pageable) {

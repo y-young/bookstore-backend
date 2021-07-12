@@ -93,8 +93,11 @@ public class BookController {
     @ApiOperation("统计销量")
     @Secured({"ROLE_ADMIN"})
     @GetMapping("/sales")
-    public DataResponse<List<BookSales>> getSales(@RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
-        return new DataResponse<>(bookService.getSales(start, end));
+    public DataResponse<Page<BookSales>> getSales(
+            @RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end,
+            Pageable pageable
+    ) {
+        return new DataResponse<>(bookService.getSales(start, end, pageable));
     }
 
     @ApiOperation("查看最新书籍")

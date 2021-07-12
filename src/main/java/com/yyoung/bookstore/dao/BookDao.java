@@ -23,9 +23,9 @@ public interface BookDao {
 
     void updateMany(List<Book> books);
 
-    List<BookSales> getSales();
+    Page<BookSales> getSales(Pageable pageable);
 
-    List<BookSales> getSales(Date start, Date end);
+    Page<BookSales> getSales(Date start, Date end, Pageable pageable);
 
     List<Book> getLatest(Pageable pageable);
 

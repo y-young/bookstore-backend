@@ -25,10 +25,10 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Integer
     List<Book> findByDeletedIsFalseOrderByIdDesc(Pageable pageable);
 
     @Query("select new com.yyoung.bookstore.dto.BookSales(b, sum(oi.amount)) from Order o inner join o.items oi inner join oi.book b group by b.id order by sum(oi.amount) desc")
-    List<BookSales> getSales();
+    Page<BookSales> getSales(Pageable pageable);
 
     @Query("select new com.yyoung.bookstore.dto.BookSales(b, sum(oi.amount)) from Order o inner join o.items oi inner join oi.book b where o.time between :start and :end group by b.id order by sum(oi.amount) desc")
-    List<BookSales> getSales(Date start, Date end);
+    Page<BookSales> getSales(Date start, Date end, Pageable pageable);
 
     @Query("select b from Order o inner join o.items oi inner join oi.book b where b.deleted = false group by b.id order by sum(oi.amount) desc")
     List<Book> getBestSales(Pageable pageable);

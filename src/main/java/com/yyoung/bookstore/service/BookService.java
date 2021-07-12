@@ -29,7 +29,7 @@ public interface BookService {
 
     Resource viewCover(String filename);
 
-    List<BookSales> getSales(Date start, Date end);
+    Page<BookSales> getSales(Date start, Date end, Pageable pageable);
 
     List<Book> getLatest();
 
