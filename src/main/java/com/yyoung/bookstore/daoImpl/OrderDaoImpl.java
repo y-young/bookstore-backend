@@ -9,6 +9,8 @@ import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -19,20 +21,20 @@ import java.util.List;
 public class OrderDaoImpl implements OrderDao {
     private final OrderRepository orderRepository;
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public Page<Order> getAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
     }
 
-    public List<Order> getAllOrders(String bookTitle) {
-        return orderRepository.findByItemsBookTitleContains(bookTitle);
+    public Page<Order> getAllOrders(String bookTitle, Pageable pageable) {
+        return orderRepository.findByItemsBookTitleContains(bookTitle, pageable);
     }
 
-    public List<Order> getAllOrders(Date start, Date end) {
-        return orderRepository.findByTimeBetween(start, end);
+    public Page<Order> getAllOrders(Date start, Date end, Pageable pageable) {
+        return orderRepository.findByTimeBetween(start, end, pageable);
     }
 
-    public List<Order> getAllOrders(String bookTitle, Date start, Date end) {
-        return orderRepository.findByItemsBookTitleContainsAndTimeBetween(bookTitle, start, end);
+    public Page<Order> getAllOrders(String bookTitle, Date start, Date end, Pageable pageable) {
+        return orderRepository.findByItemsBookTitleContainsAndTimeBetween(bookTitle, start, end, pageable);
     }
 
     public Order addOrder(Order order) {
@@ -49,20 +51,20 @@ public class OrderDaoImpl implements OrderDao {
         return orderRepository.findByIdAndUser(orderId, user).orElseThrow(ResourceNotFoundException::new);
     }
 
-    public List<Order> getUserOrders(User user) {
-        return orderRepository.findByUser(user);
+    public Page<Order> getUserOrders(User user, Pageable pageable) {
+        return orderRepository.findByUser(user, pageable);
     }
 
-    public List<Order> getUserOrders(User user, String bookTitle) {
-        return orderRepository.findDistinctByUserAndItemsBookTitleContains(user, bookTitle);
+    public Page<Order> getUserOrders(User user, String bookTitle, Pageable pageable) {
+        return orderRepository.findDistinctByUserAndItemsBookTitleContains(user, bookTitle, pageable);
     }
 
-    public List<Order> getUserOrders(User user, Date start, Date end) {
-        return orderRepository.findByUserAndTimeBetween(user, start, end);
+    public Page<Order> getUserOrders(User user, Date start, Date end, Pageable pageable) {
+        return orderRepository.findByUserAndTimeBetween(user, start, end, pageable);
     }
 
-    public List<Order> getUserOrders(User user, String bookTitle, Date start, Date end) {
-        return orderRepository.findDistinctByUserAndItemsBookTitleContainsAndTimeBetween(user, bookTitle, start, end);
+    public Page<Order> getUserOrders(User user, String bookTitle, Date start, Date end, Pageable pageable) {
+        return orderRepository.findDistinctByUserAndItemsBookTitleContainsAndTimeBetween(user, bookTitle, start, end, pageable);
     }
 
     public List<BookTypeCount> getUserBookStatistics(Integer userId) {

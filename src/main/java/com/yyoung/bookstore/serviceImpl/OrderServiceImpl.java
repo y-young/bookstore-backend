@@ -15,6 +15,8 @@ import com.yyoung.bookstore.service.UserService;
 import com.yyoung.bookstore.utils.Helpers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,17 +30,17 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final UserService userService;
 
-    public List<Order> viewAllOrders(String bookTitle, Date start, Date end) {
+    public Page<Order> viewAllOrders(String bookTitle, Date start, Date end, Pageable pageable) {
         if (bookTitle != null && !bookTitle.isEmpty()) {
             if (Helpers.hasDateRange(start, end)) {
-                return orderDao.getAllOrders(bookTitle, start, end);
+                return orderDao.getAllOrders(bookTitle, start, end, pageable);
             }
-            return orderDao.getAllOrders(bookTitle);
+            return orderDao.getAllOrders(bookTitle, pageable);
         }
         if (Helpers.hasDateRange(start, end)) {
-            return orderDao.getAllOrders(start, end);
+            return orderDao.getAllOrders(start, end, pageable);
         }
-        return orderDao.getAllOrders();
+        return orderDao.getAllOrders(pageable);
     }
 
     @Transactional
@@ -78,18 +80,18 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public List<Order> viewMyOrders(String bookTitle, Date start, Date end) {
+    public Page<Order> viewMyOrders(String bookTitle, Date start, Date end, Pageable pageable) {
         User user = userService.getCurrentUser();
         if (bookTitle != null && !bookTitle.isEmpty()) {
             if (Helpers.hasDateRange(start, end)) {
-                return orderDao.getUserOrders(user, bookTitle, start, end);
+                return orderDao.getUserOrders(user, bookTitle, start, end, pageable);
             }
-            return orderDao.getUserOrders(user, bookTitle);
+            return orderDao.getUserOrders(user, bookTitle, pageable);
         }
         if (Helpers.hasDateRange(start, end)) {
-            return orderDao.getUserOrders(user, start, end);
+            return orderDao.getUserOrders(user, start, end, pageable);
         }
-        return orderDao.getUserOrders(user);
+        return orderDao.getUserOrders(user, pageable);
     }
 
     public List<BookTypeCount> getMyBookStatistics(Date start, Date end) {

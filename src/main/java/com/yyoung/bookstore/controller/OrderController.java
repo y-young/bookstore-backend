@@ -9,6 +9,8 @@ import com.yyoung.bookstore.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +30,12 @@ public class OrderController {
     @ApiOperation("查看所有订单")
     @Secured({"ROLE_ADMIN"})
     @GetMapping
-    public DataResponse<List<Order>> viewAllOrders(@RequestParam(value = "bookTitle", required = false) String bookTitle, @RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
-        return new DataResponse<>(orderService.viewAllOrders(bookTitle, start, end));
+    public DataResponse<Page<Order>> viewAllOrders(
+            @RequestParam(value = "bookTitle", required = false) String bookTitle,
+            @RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end,
+            Pageable pageable
+    ) {
+        return new DataResponse<>(orderService.viewAllOrders(bookTitle, start, end, pageable));
     }
 
     @ApiOperation("提交订单")
@@ -47,8 +53,12 @@ public class OrderController {
 
     @ApiOperation("查看当前用户的所有订单")
     @GetMapping("/my")
-    public DataResponse<List<Order>> viewMyOrders(@RequestParam(value = "bookTitle", required = false) String bookTitle, @RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end) {
-        return new DataResponse<>(orderService.viewMyOrders(bookTitle, start, end));
+    public DataResponse<Page<Order>> viewMyOrders(
+            @RequestParam(value = "bookTitle", required = false) String bookTitle,
+            @RequestParam(value = "start", required = false) Date start, @RequestParam(value = "end", required = false) Date end,
+            Pageable pageable
+    ) {
+        return new DataResponse<>(orderService.viewMyOrders(bookTitle, start, end, pageable));
     }
 
     @ApiOperation("查看当前用户购书情况")

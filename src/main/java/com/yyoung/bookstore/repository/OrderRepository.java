@@ -4,32 +4,34 @@ import com.yyoung.bookstore.dto.BookTypeCount;
 import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
-public interface OrderRepository extends CrudRepository<Order, Integer> {
+public interface OrderRepository extends PagingAndSortingRepository<Order, Integer> {
     @Override
-    List<Order> findAll();
+    Page<Order> findAll(Pageable pageable);
 
-    List<Order> findByItemsBookTitleContains(String bookTitle);
+    Page<Order> findByItemsBookTitleContains(String bookTitle, Pageable pageable);
 
-    List<Order> findByTimeBetween(Date start, Date end);
+    Page<Order> findByTimeBetween(Date start, Date end, Pageable pageable);
 
-    List<Order> findByItemsBookTitleContainsAndTimeBetween(String bookTitle, Date start, Date end);
+    Page<Order> findByItemsBookTitleContainsAndTimeBetween(String bookTitle, Date start, Date end, Pageable pageable);
 
     Optional<Order> findByIdAndUser(Integer orderId, User user);
 
-    List<Order> findByUser(User user);
+    Page<Order> findByUser(User user, Pageable pageable);
 
-    List<Order> findDistinctByUserAndItemsBookTitleContains(User user, String bookTitle);
+    Page<Order> findDistinctByUserAndItemsBookTitleContains(User user, String bookTitle, Pageable pageable);
 
-    List<Order> findByUserAndTimeBetween(User user, Date start, Date end);
+    Page<Order> findByUserAndTimeBetween(User user, Date start, Date end, Pageable pageable);
 
-    List<Order> findDistinctByUserAndItemsBookTitleContainsAndTimeBetween(User user, String bookTitle, Date start, Date end);
+    Page<Order> findDistinctByUserAndItemsBookTitleContainsAndTimeBetween(User user, String bookTitle, Date start, Date end, Pageable pageable);
 
     @Query("select new com.yyoung.bookstore.dto.BookTypeCount(b.type, sum(oi.amount)) from Order o join o.items oi join oi.book b where o.user.id = :userId group by b.type order by sum(oi.amount) desc")
     List<BookTypeCount> getUserBookStatistics(Integer userId);

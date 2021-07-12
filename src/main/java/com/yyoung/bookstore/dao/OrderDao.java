@@ -4,18 +4,20 @@ import com.yyoung.bookstore.dto.BookTypeCount;
 import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
 import java.util.List;
 
 public interface OrderDao {
-    List<Order> getAllOrders();
+    Page<Order> getAllOrders(Pageable pageable);
 
-    List<Order> getAllOrders(String bookTitle);
+    Page<Order> getAllOrders(String bookTitle, Pageable pageable);
 
-    List<Order> getAllOrders(Date start, Date end);
+    Page<Order> getAllOrders(Date start, Date end, Pageable pageable);
 
-    List<Order> getAllOrders(String bookTitle, Date start, Date end);
+    Page<Order> getAllOrders(String bookTitle, Date start, Date end, Pageable pageable);
 
     Order addOrder(Order order);
 
@@ -23,13 +25,13 @@ public interface OrderDao {
 
     Order getUserOrder(Integer orderId, User user);
 
-    List<Order> getUserOrders(User user);
+    Page<Order> getUserOrders(User user, Pageable pageable);
 
-    List<Order> getUserOrders(User user, String bookTitle);
+    Page<Order> getUserOrders(User user, String bookTitle, Pageable pageable);
 
-    List<Order> getUserOrders(User user, Date start, Date end);
+    Page<Order> getUserOrders(User user, Date start, Date end, Pageable pageable);
 
-    List<Order> getUserOrders(User user, String bookTitle, Date start, Date end);
+    Page<Order> getUserOrders(User user, String bookTitle, Date start, Date end, Pageable pageable);
 
     List<BookTypeCount> getUserBookStatistics(Integer userId);
 
