@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +42,9 @@ public class OrderController {
 
     @ApiOperation("提交订单")
     @PostMapping
-    public DataResponse<Order> placeOrder(@RequestBody @NotEmpty(message = "订单中没有商品") List<@Valid OrderItem> items) {
-        return new DataResponse<>(orderService.placeOrder(items));
+    public ResponseEntity<?> placeOrder(@RequestBody @NotEmpty(message = "订单中没有商品") List<@Valid OrderItem> items) {
+        orderService.placeOrder(items);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation("查看订单详情")

@@ -1,15 +1,13 @@
 package com.yyoung.bookstore.serviceImpl;
 
 import com.yyoung.bookstore.constants.Role;
-import com.yyoung.bookstore.dao.BookDao;
 import com.yyoung.bookstore.dao.OrderDao;
 import com.yyoung.bookstore.dto.BookTypeCount;
+import com.yyoung.bookstore.dto.NewOrder;
 import com.yyoung.bookstore.dto.OrderStatistics;
 import com.yyoung.bookstore.entity.OrderItem;
-import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.entity.User;
-import com.yyoung.bookstore.exception.BusinessLogicException;
 import com.yyoung.bookstore.service.OrderService;
 import com.yyoung.bookstore.service.UserService;
 import com.yyoung.bookstore.utils.Helpers;
@@ -17,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -26,9 +24,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OrderServiceImpl implements OrderService {
-    private final BookDao bookDao;
     private final OrderDao orderDao;
     private final UserService userService;
+
+    private final JmsTemplate jmsTemplate;
 
     public Page<Order> viewAllOrders(String bookTitle, Date start, Date end, Pageable pageable) {
         if (bookTitle != null && !bookTitle.isEmpty()) {
@@ -43,32 +42,10 @@ public class OrderServiceImpl implements OrderService {
         return orderDao.getAllOrders(pageable);
     }
 
-    @Transactional
-    public Order placeOrder(List<OrderItem> items) {
+    public void placeOrder(List<OrderItem> items) {
         User user = userService.getCurrentUser();
-        Order order = new Order();
-        int total = 0, totalAmount = 0;
-        for (OrderItem item :
-                items) {
-            Book book = bookDao.findById(item.getBook().getId());
-            Integer amount = item.getAmount();
-            if (book.getDeleted()) {
-                throw new BusinessLogicException("商品已下架");
-            }
-            if (book.getStock() < item.getAmount()) {
-                throw new BusinessLogicException("库存不足");
-            }
-            book.setStock(book.getStock() - amount);
-            bookDao.save(book);
-            totalAmount += amount;
-            total += book.getPrice() * amount;
-            item.setBook(book);
-            order.addItem(item);
-        }
-        order.setUser(user);
-        order.setTotalAmount(totalAmount);
-        order.setTotal(total);
-        return orderDao.addOrder(order);
+        NewOrder newOrder = new NewOrder(user, items);
+        jmsTemplate.convertAndSend("newOrder", newOrder);
     }
 
     public Order viewOrder(Integer orderId) {

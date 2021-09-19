@@ -1,5 +1,6 @@
 package com.yyoung.bookstore.entity;
 
+import com.yyoung.bookstore.constants.OrderStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,6 +34,14 @@ public class Order {
     @Column(nullable = false)
     @ApiModelProperty("商品总数")
     private Integer totalAmount = 0;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @ApiModelProperty("订单状态")
+    private OrderStatus status;
+
+    @ApiModelProperty("失败原因")
+    private String failedReason = "";
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

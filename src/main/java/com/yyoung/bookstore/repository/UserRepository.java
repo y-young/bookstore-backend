@@ -18,15 +18,15 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     boolean existsByUsername(String username);
 
-    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u group by u.id order by sum(o.total) desc")
+    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u where o.status = 'completed' group by u.id order by sum(o.total) desc")
     List<UserConsumption> getRank();
 
-    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u where o.time between :start and :end group by u.id order by sum(o.total) desc")
+    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u where o.time between :start and :end and o.status = 'completed' group by u.id order by sum(o.total) desc")
     List<UserConsumption> getRank(Date start, Date end);
 
-    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u where u.id = :userId")
+    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u where u.id = :userId and o.status = 'completed'")
     UserConsumption getUserStatistics(Integer userId);
 
-    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u where u.id = :userId and o.time between :start and :end")
+    @Query("select new com.yyoung.bookstore.dto.UserConsumption(u, count(o), sum(o.totalAmount), sum(o.total)) from Order o join o.user u where u.id = :userId and o.time between :start and :end and o.status = 'completed'")
     UserConsumption getUserStatistics(Integer userId, Date start, Date end);
 }

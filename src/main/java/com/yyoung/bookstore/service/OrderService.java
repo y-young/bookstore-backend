@@ -13,7 +13,7 @@ import java.util.List;
 public interface OrderService {
     Page<Order> viewAllOrders(String bookTitle, Date start, Date end, Pageable pageable);
 
-    Order placeOrder(List<OrderItem> items);
+    void placeOrder(List<OrderItem> items);
 
     Order viewOrder(Integer orderId);
 

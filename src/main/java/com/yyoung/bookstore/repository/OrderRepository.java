@@ -33,15 +33,15 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, Integ
 
     Page<Order> findDistinctByUserAndItemsBookTitleContainsAndTimeBetween(User user, String bookTitle, Date start, Date end, Pageable pageable);
 
-    @Query("select new com.yyoung.bookstore.dto.BookTypeCount(b.type, sum(oi.amount)) from Order o join o.items oi join oi.book b where o.user.id = :userId group by b.type order by sum(oi.amount) desc")
+    @Query("select new com.yyoung.bookstore.dto.BookTypeCount(b.type, sum(oi.amount)) from Order o join o.items oi join oi.book b where o.user.id = :userId and o.status = 'completed' group by b.type order by sum(oi.amount) desc")
     List<BookTypeCount> getUserBookStatistics(Integer userId);
 
-    @Query("select new com.yyoung.bookstore.dto.BookTypeCount(b.type, sum(oi.amount)) from Order o join o.items oi join oi.book b where o.user.id = :userId and o.time between :start and :end group by b.type order by sum(oi.amount) desc")
+    @Query("select new com.yyoung.bookstore.dto.BookTypeCount(b.type, sum(oi.amount)) from Order o join o.items oi join oi.book b where o.user.id = :userId and o.time between :start and :end and o.status = 'completed' group by b.type order by sum(oi.amount) desc")
     List<BookTypeCount> getUserBookStatistics(Integer userId, Date start, Date end);
 
-    @Query("select new com.yyoung.bookstore.dto.OrderStatistics(count(o), sum(o.totalAmount), sum(o.total)) from Order o")
+    @Query("select new com.yyoung.bookstore.dto.OrderStatistics(count(o), sum(o.totalAmount), sum(o.total)) from Order o where o.status = 'completed'")
     OrderStatistics getStatistics();
 
-    @Query("select new com.yyoung.bookstore.dto.OrderStatistics(count(o), sum(o.totalAmount), sum(o.total)) from Order o where o.time between :start and :end")
+    @Query("select new com.yyoung.bookstore.dto.OrderStatistics(count(o), sum(o.totalAmount), sum(o.total)) from Order o where o.time between :start and :end and o.status = 'completed'")
     OrderStatistics getStatistics(Date start, Date end);
 }
