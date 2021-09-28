@@ -21,6 +21,8 @@ public interface BookDao {
 
     Book updateOne(Book book);
 
+    void reduceStock(Book book, Integer amount);
+
     void updateMany(List<Book> books);
 
     Page<BookSales> getSales(Pageable pageable);

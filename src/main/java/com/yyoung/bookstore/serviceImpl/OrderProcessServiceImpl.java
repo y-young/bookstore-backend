@@ -9,7 +9,9 @@ import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
+import com.yyoung.bookstore.repository.BookRepository;
 import com.yyoung.bookstore.service.OrderProcessService;
+import com.yyoung.bookstore.service.UpdateStocksService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
@@ -23,6 +25,7 @@ import java.util.List;
 public class OrderProcessServiceImpl implements OrderProcessService {
     private final BookDao bookDao;
     private final OrderDao orderDao;
+    private final UpdateStocksService updateStocksService;
 
     @JmsListener(destination = "newOrder")
     @Transactional // Important
@@ -44,33 +47,13 @@ public class OrderProcessServiceImpl implements OrderProcessService {
         order.setUser(user);
         order.setTotalAmount(totalAmount);
         order.setTotal(total);
-        // Validate the order and set status accordingly
         try {
-            updateStocks(order);
+            updateStocksService.updateStocks(order);
             order.setStatus(OrderStatus.completed);
         } catch (BusinessLogicException exception) {
             order.setStatus(OrderStatus.failed);
             order.setFailedReason(exception.getReason());
         }
         orderDao.addOrder(order);
-    }
-
-    @Transactional
-    public Order updateStocks(Order order) {
-        for (OrderItem item :
-                order.getItems()) {
-            Book book = item.getBook();
-            Integer amount = item.getAmount();
-            if (book.getDeleted()) {
-                throw new BusinessLogicException("商品已下架");
-            }
-            if (book.getStock() < item.getAmount()) {
-                throw new BusinessLogicException("库存不足");
-            }
-            book.setStock(book.getStock() - amount);
-            bookDao.updateOne(book);
-            item.setBook(book);
-        }
-        return order;
     }
 }

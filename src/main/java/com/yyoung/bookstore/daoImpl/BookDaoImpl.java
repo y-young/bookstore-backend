@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -41,6 +44,16 @@ public class BookDaoImpl implements BookDao {
 
     public Book updateOne(Book book) {
         return bookRepository.save(book);
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.REPEATABLE_READ)
+    public void reduceStock(Book book, Integer amount) {
+        // Avoid direct update on entity, since it'll bypass transaction
+        // https://stackoverflow.com/questions/8190926/transactional-saves-without-calling-update-method
+        bookRepository.findById(book.getId()).ifPresent(consumer -> {
+            consumer.setStock(consumer.getStock() - amount);
+            bookRepository.save(consumer);
+        });
     }
 
     public void updateMany(List<Book> books) {
