@@ -31,7 +31,7 @@ public class UpdateStocksServiceImpl implements UpdateStocksService {
             if (book.getStock() < amount) {
                 throw new BusinessLogicException("库存不足");
             }
-            bookDao.reduceStock(book, amount);
+            bookDao.reduceStock(book.getId(), amount);
         }
     }
 }

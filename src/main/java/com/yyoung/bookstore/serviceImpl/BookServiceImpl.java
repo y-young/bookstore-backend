@@ -11,6 +11,8 @@ import com.yyoung.bookstore.utils.Helpers;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -34,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "books")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
@@ -41,6 +44,12 @@ public class BookServiceImpl implements BookService {
     private final ResourceLoader resourceLoader;
     private final String staticPath = "src/main/resources/static";
 
+    /*
+     BookDao.findById shouldn't be cached since it's used by OrderService to check stock,
+     besides it would also result in a detached Hibernate entity fetched from cache.
+     https://stackoverflow.com/questions/47154380/saving-entity-with-cached-object-in-it-causing-detached-entity-exception
+     */
+    @Cacheable(key = "#bookId")
     public Book findById(Integer bookId) {
         return bookDao.findById(bookId);
     }

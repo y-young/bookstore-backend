@@ -7,6 +7,9 @@ import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -18,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
+@CacheConfig(cacheNames = "books")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookDaoImpl implements BookDao {
     private final BookRepository bookRepository;
@@ -42,15 +46,17 @@ public class BookDaoImpl implements BookDao {
         bookRepository.save(book);
     }
 
+    @CachePut(key = "#book.getId()")
     public Book updateOne(Book book) {
         return bookRepository.save(book);
     }
 
     @Transactional(propagation = Propagation.MANDATORY, isolation = Isolation.REPEATABLE_READ)
-    public void reduceStock(Book book, Integer amount) {
+    @CacheEvict(key = "#bookId")
+    public void reduceStock(Integer bookId, Integer amount) {
         // Avoid direct update on entity, since it'll bypass transaction
         // https://stackoverflow.com/questions/8190926/transactional-saves-without-calling-update-method
-        bookRepository.findById(book.getId()).ifPresent(consumer -> {
+        bookRepository.findById(bookId).ifPresent(consumer -> {
             consumer.setStock(consumer.getStock() - amount);
             bookRepository.save(consumer);
         });
@@ -74,9 +80,5 @@ public class BookDaoImpl implements BookDao {
 
     public List<Book> getBestSales(Pageable pageable) {
         return bookRepository.getBestSales(pageable);
-    }
-
-    public void save(Book book) {
-        bookRepository.save(book);
     }
 }

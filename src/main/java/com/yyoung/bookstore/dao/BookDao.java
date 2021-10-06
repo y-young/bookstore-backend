@@ -21,7 +21,7 @@ public interface BookDao {
 
     Book updateOne(Book book);
 
-    void reduceStock(Book book, Integer amount);
+    void reduceStock(Integer bookId, Integer amount);
 
     void updateMany(List<Book> books);
 
@@ -32,6 +32,4 @@ public interface BookDao {
     List<Book> getLatest(Pageable pageable);
 
     List<Book> getBestSales(Pageable pageable);
-
-    void save(Book book);
 }
