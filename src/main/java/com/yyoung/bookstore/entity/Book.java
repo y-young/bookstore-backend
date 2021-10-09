@@ -41,6 +41,10 @@ public class Book implements Serializable {
     @ApiModelProperty("书籍类型")
     private String type;
 
+    @Column(columnDefinition = "TEXT")
+    @ApiModelProperty("简介")
+    private String description;
+
     @ApiModelProperty("封面图片路径")
     private String cover;
 

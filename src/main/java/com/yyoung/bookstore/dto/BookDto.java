@@ -33,6 +33,9 @@ public class BookDto {
     @ApiModelProperty("书籍类型")
     private String type;
 
+    @ApiModelProperty("简介")
+    private String description;
+
     @ApiModelProperty("封面图片路径")
     @NotNull(message = "封面为必选项")
     private String cover;
