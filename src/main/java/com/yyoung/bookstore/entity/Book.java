@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.solr.client.solrj.beans.Field;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,13 +18,16 @@ import java.io.Serializable;
 @ApiModel("书籍")
 public class Book implements Serializable {
     @Id
+    @Field
     @GeneratedValue
     private Integer id;
 
+    @Field
     @Column(nullable = false)
     @ApiModelProperty("书名")
     private String title;
 
+    @Field
     @ApiModelProperty("作者")
     private String author;
 
@@ -41,6 +45,7 @@ public class Book implements Serializable {
     @ApiModelProperty("书籍类型")
     private String type;
 
+    @Field
     @Column(columnDefinition = "TEXT")
     @ApiModelProperty("简介")
     private String description;

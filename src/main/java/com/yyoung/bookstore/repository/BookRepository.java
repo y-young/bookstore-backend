@@ -14,6 +14,8 @@ import java.util.Optional;
 
 @Repository
 public interface BookRepository extends PagingAndSortingRepository<Book, Integer> {
+    List<Book> findByDeletedIsFalse();
+
     Page<Book> findByDeletedIsFalse(Pageable pageable);
 
     Page<Book> findByTitleContainsAndDeletedIsFalse(String keyword, Pageable pageable);
@@ -21,6 +23,8 @@ public interface BookRepository extends PagingAndSortingRepository<Book, Integer
     Optional<Book> findById(Integer bookId);
 
     List<Book> findByIdIn(List<Integer> bookIds);
+
+    Page<Book> findByIdIn(List<Integer> bookIds, Pageable pageable);
 
     List<Book> findByDeletedIsFalseOrderByIdDesc(Pageable pageable);
 

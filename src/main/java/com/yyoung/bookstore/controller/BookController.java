@@ -6,9 +6,11 @@ import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.dto.api.DataResponse;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.service.BookService;
+import com.yyoung.bookstore.service.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -20,7 +22,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.naming.ServiceUnavailableException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URLConnection;
 import java.util.Date;
 import java.util.List;
@@ -31,11 +35,19 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookController {
     private final BookService bookService;
+    private final SearchService searchService;
 
     @ApiOperation("获取所有书籍列表")
     @GetMapping
-    public DataResponse<Page<Book>> listBooks(@RequestParam(value = "keyword", required = false) String keyword, Pageable pageable) {
-        return new DataResponse<>(bookService.findAll(keyword, pageable));
+    public DataResponse<Page<Book>> listBooks(@RequestParam(value = "query", required = false) String query, Pageable pageable) throws ServiceUnavailableException {
+        if (query == null || query.isEmpty()) {
+            return new DataResponse<>(bookService.findAll(pageable));
+        }
+        try {
+            return new DataResponse<>(searchService.search(query, pageable));
+        } catch (SolrServerException | IOException exception) {
+            throw new ServiceUnavailableException();
+        }
     }
 
     @ApiOperation("获取指定书籍信息")

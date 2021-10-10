@@ -23,6 +23,7 @@ public class SecurityConstants {
             "/users/login",
             "/books/latest",
             "/books/bestSales",
+            "/books",
             "/chat",
             "/statistics/updatePageView"
     };

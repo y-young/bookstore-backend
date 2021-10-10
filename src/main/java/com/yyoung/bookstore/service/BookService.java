@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface BookService {
-    Page<Book> findAll(String keyword, Pageable pageable);
+    Page<Book> findAll(Pageable pageable);
 
     Book findById(Integer bookId);
 

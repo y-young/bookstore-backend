@@ -11,13 +11,17 @@ import java.util.List;
 public interface BookDao {
     Book findById(Integer bookId);
 
+    List<Book> findAll();
+
     Page<Book> findAll(Pageable pageable);
 
     Page<Book> findAll(String keyword, Pageable pageable);
 
     List<Book> findByIdIn(List<Integer> bookIds);
 
-    void addOne(Book book);
+    Page<Book> findByIdIn(List<Integer> bookIds, Pageable pageable);
+
+    Book addOne(Book book);
 
     Book updateOne(Book book);
 

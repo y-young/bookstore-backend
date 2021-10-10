@@ -34,6 +34,14 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findByIdIn(bookIds);
     }
 
+    public Page<Book> findByIdIn(List<Integer> bookIds, Pageable pageable) {
+        return bookRepository.findByIdIn(bookIds, pageable);
+    }
+
+    public List<Book> findAll() {
+        return bookRepository.findByDeletedIsFalse();
+    }
+
     public Page<Book> findAll(Pageable pageable) {
         return bookRepository.findByDeletedIsFalse(pageable);
     }
@@ -42,8 +50,8 @@ public class BookDaoImpl implements BookDao {
         return bookRepository.findByTitleContainsAndDeletedIsFalse(keyword, pageable);
     }
 
-    public void addOne(Book book) {
-        bookRepository.save(book);
+    public Book addOne(Book book) {
+        return bookRepository.save(book);
     }
 
     @CachePut(key = "#book.getId()")

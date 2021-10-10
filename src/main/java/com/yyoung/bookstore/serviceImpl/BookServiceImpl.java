@@ -7,6 +7,7 @@ import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.entity.Book;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
 import com.yyoung.bookstore.service.BookService;
+import com.yyoung.bookstore.service.SearchService;
 import com.yyoung.bookstore.utils.Helpers;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -40,6 +41,8 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
+    private final SearchService searchService;
+
     private final ModelMapper modelMapper;
     private final ResourceLoader resourceLoader;
     private final String staticPath = "src/main/resources/static";
@@ -54,22 +57,21 @@ public class BookServiceImpl implements BookService {
         return bookDao.findById(bookId);
     }
 
-    public Page<Book> findAll(String keyword, Pageable pageable) {
-        if (keyword != null) {
-            return bookDao.findAll(keyword, pageable);
-        }
+    public Page<Book> findAll(Pageable pageable) {
         return bookDao.findAll(pageable);
     }
 
     public void addOne(BookDto newBook) {
         Book book = modelMapper.map(newBook, Book.class);
-        bookDao.addOne(book);
+        book = bookDao.addOne(book);
+        searchService.addToIndex(book);
     }
 
     public void deleteOne(Integer bookId) {
         Book book = bookDao.findById(bookId);
         book.setDeleted(true);
         bookDao.updateOne(book);
+        searchService.removeFromIndex(book);
     }
 
     public void deleteMany(List<Integer> bookIds) {
@@ -79,12 +81,15 @@ public class BookServiceImpl implements BookService {
             book.setDeleted(true);
         }
         bookDao.updateMany(books);
+        searchService.removeFromIndex(books);
     }
 
     public Book updateOne(Integer bookId, BookDto book) {
         Book existingBook = bookDao.findById(bookId);
         modelMapper.map(book, existingBook);
-        return bookDao.updateOne(existingBook);
+        Book newBook = bookDao.updateOne(existingBook);
+        searchService.updateIndex(newBook);
+        return newBook;
     }
 
     public UploadResult uploadCover(MultipartFile file) {
