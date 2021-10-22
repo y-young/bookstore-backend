@@ -9,7 +9,6 @@ import com.yyoung.bookstore.entity.Order;
 import com.yyoung.bookstore.entity.OrderItem;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
-import com.yyoung.bookstore.repository.BookRepository;
 import com.yyoung.bookstore.service.OrderProcessService;
 import com.yyoung.bookstore.service.UpdateStocksService;
 import lombok.RequiredArgsConstructor;

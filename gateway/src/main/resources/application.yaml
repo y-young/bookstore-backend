@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      # Java routes API does not support default filters
+      # https://github.com/spring-cloud/spring-cloud-gateway/issues/263
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Vary, RETAIN_FIRST
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - PATCH
+              - OPTIONS
+      routes:
+        - uri: "lb://SEARCH-SERVICE"
+          predicates:
+            - Path=/search/**
+          filters:
+            - StripPrefix=1
+        - uri: "lb://MAIN-SERVICE"
+          predicates:
+            - Path=/**
+eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+#logging:
+#  level:
+#    org.springframework.cloud: DEBUG

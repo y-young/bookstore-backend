@@ -25,6 +25,7 @@ public class SecurityConstants {
             "/books/bestSales",
             "/books",
             "/chat",
-            "/statistics/updatePageView"
+            "/statistics/updatePageView",
+            "/actuator/**"
     };
 }
