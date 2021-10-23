@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: main-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/bookstore?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC%2B8
+    username: bookstore
+    password: j2Cpwys5YEJdAra6
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    tomcat:
+      max-active: 20
+  devtools:
+    restart:
+      enabled: true
+  jpa:
+    database: mysql
+    show-sql: false
+    properties:
+      hibernate.hbm2ddl.auto: update
+  servlet:
+    multipart:
+      max-file-size: 5MB
+  mvc:
+    format:
+      date: yyyy-MM-dd
+server:
+  port: 8081
+  error:
+    include-stacktrace: never
+    include-message: always
+  #    servlet:
+  #      context-path: /api
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore.p12
+    key-store-password: bookstore
+    key-alias: tomcat
+# Print transaction trace
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        orm:
+#          jpa: trace
+#        transaction:
+#          interceptor: trace
+solr:
+  url: http://localhost:8983/solr
+  collection: books
+eureka:
+  instance:
+    hostname: bookstore.gpx.moe
+    non-secure-port-enabled: false
+    secure-port-enabled: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+  health:
+    solr:
+      enabled: false
