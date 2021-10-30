@@ -19,6 +19,7 @@ import java.io.Serializable;
 public class Book implements Serializable {
     @Id
     @Field
+    @Column(columnDefinition = "MEDIUMINT UNSIGNED")
     @GeneratedValue
     private Integer id;
 
@@ -31,14 +32,15 @@ public class Book implements Serializable {
     @ApiModelProperty("作者")
     private String author;
 
+    @Column(columnDefinition = "CHAR(13)")
     @ApiModelProperty("ISBN")
     private String isbn;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "MEDIUMINT(6) UNSIGNED")
     @ApiModelProperty("库存量")
     private Integer stock = 0;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "MEDIUMINT(6) UNSIGNED")
     @ApiModelProperty("价格（分）")
     private Integer price;
 
@@ -50,6 +52,7 @@ public class Book implements Serializable {
     @ApiModelProperty("简介")
     private String description;
 
+    @Column(columnDefinition = "CHAR(36)")
     @ApiModelProperty("封面图片路径")
     private String cover;
 

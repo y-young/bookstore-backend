@@ -2,6 +2,7 @@ package com.yyoung.bookstore.serviceImpl;
 
 import com.yyoung.bookstore.dao.UserDao;
 import com.yyoung.bookstore.dto.*;
+import com.yyoung.bookstore.entity.Email;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.exception.BusinessLogicException;
 import com.yyoung.bookstore.service.UserService;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
         }
         newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         User user = modelMapper.map(newUser, User.class);
+        user.setEmail(new Email(newUser.getEmail(), user));
         userDao.save(user);
     }
 

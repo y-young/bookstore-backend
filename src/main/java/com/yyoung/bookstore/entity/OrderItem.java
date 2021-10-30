@@ -27,7 +27,7 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "SMALLINT(4) UNSIGNED")
     @Positive(message = "购买数量必须为正数")
     @ApiModelProperty("购买数量")
     private Integer amount;

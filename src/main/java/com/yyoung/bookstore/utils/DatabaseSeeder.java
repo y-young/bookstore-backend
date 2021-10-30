@@ -1,6 +1,7 @@
 package com.yyoung.bookstore.utils;
 
 import com.yyoung.bookstore.constants.Role;
+import com.yyoung.bookstore.entity.Email;
 import com.yyoung.bookstore.entity.User;
 import com.yyoung.bookstore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class DatabaseSeeder {
             user.setId(1);
             user.setUsername("admin");
             user.setPassword(password);
-            user.setEmail("i@gpx.moe");
+            user.setEmail(new Email("i@gpx.moe", user));
             user.setRole(Role.admin);
             user.setDisabled(false);
             userRepository.save(user);
