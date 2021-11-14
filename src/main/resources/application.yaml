@@ -8,6 +8,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     tomcat:
       max-active: 20
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/bookstore
   devtools:
     restart:
       enabled: true

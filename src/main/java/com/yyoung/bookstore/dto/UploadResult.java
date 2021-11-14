@@ -9,6 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 @ApiModel("文件上传结果")
 public class UploadResult {
-    @ApiModelProperty("存储的文件名称")
-    private String filename;
+    @ApiModelProperty("文件ID")
+    private String id;
 }

@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.ServiceUnavailableException;
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.Date;
@@ -95,11 +95,19 @@ public class BookController {
     }
 
     @ApiOperation("查看封面")
-    @GetMapping("/cover/{filename}")
-    public ResponseEntity<?> viewCover(@PathVariable("filename") String filename) {
-        Resource image = bookService.viewCover(filename);
-        String fileType = URLConnection.guessContentTypeFromName(image.getFilename());
-        return ResponseEntity.ok().contentType(MediaType.valueOf(fileType)).body(image);
+    @GetMapping("/cover/{id}")
+    public ResponseEntity<?> viewCover(@PathVariable("id") String id) {
+        byte[] image = bookService.viewCover(id);
+        try {
+            String fileType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(image));
+            if (fileType == null) {
+                fileType = "image/jpeg";
+            }
+            return ResponseEntity.ok().contentType(MediaType.valueOf(fileType)).body(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @ApiOperation("统计销量")

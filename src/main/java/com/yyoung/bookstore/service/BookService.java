@@ -4,7 +4,6 @@ import com.yyoung.bookstore.dto.BookDto;
 import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.entity.Book;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +26,7 @@ public interface BookService {
 
     UploadResult uploadCover(MultipartFile file);
 
-    Resource viewCover(String filename);
+    byte[] viewCover(String id);
 
     Page<BookSales> getSales(Date start, Date end, Pageable pageable);
 

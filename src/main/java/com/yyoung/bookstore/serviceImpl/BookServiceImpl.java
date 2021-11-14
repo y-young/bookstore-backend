@@ -5,7 +5,9 @@ import com.yyoung.bookstore.dto.BookDto;
 import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.dto.UploadResult;
 import com.yyoung.bookstore.entity.Book;
+import com.yyoung.bookstore.entity.BookCover;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
+import com.yyoung.bookstore.repository.BookCoverRepository;
 import com.yyoung.bookstore.service.BookService;
 import com.yyoung.bookstore.service.SearchService;
 import com.yyoung.bookstore.utils.Helpers;
@@ -14,9 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ValidationException;
-import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URLConnection;
@@ -35,6 +33,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @CacheConfig(cacheNames = "books")
@@ -42,10 +41,9 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final SearchService searchService;
+    private final BookCoverRepository bookCoverRepository;
 
     private final ModelMapper modelMapper;
-    private final ResourceLoader resourceLoader;
-    private final String staticPath = "src/main/resources/static";
 
     /*
      BookDao.findById shouldn't be cached since it's used by OrderService to check stock,
@@ -94,10 +92,7 @@ public class BookServiceImpl implements BookService {
 
     public UploadResult uploadCover(MultipartFile file) {
         String filename = file.getOriginalFilename();
-        String extension, storeFilename;
-        if (filename != null && filename.contains(".")) {
-            extension = filename.substring(filename.lastIndexOf(".") + 1);
-        } else {
+        if (filename == null || !filename.contains(".")) {
             throw new ValidationException("请使用合法的文件名");
         }
         String fileType = URLConnection.guessContentTypeFromName(filename);
@@ -107,30 +102,27 @@ public class BookServiceImpl implements BookService {
         if (file.getSize() > 5 * 1024 * 1024) {
             throw new ValidationException("请上传大小小于5MB的图片");
         }
+        BookCover bookCover = new BookCover();
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             byte[] digest = messageDigest.digest(file.getBytes());
             String md5 = new BigInteger(1, digest).toString(16);
-            storeFilename = md5 + "." + extension;
-            String uploadPath = new FileSystemResource(staticPath).getFile().getAbsolutePath();
-            File storeFile = new File(uploadPath, storeFilename);
-            if (!storeFile.exists()) {
-                file.transferTo(storeFile);
-            }
+            bookCover.setId(md5);
+            bookCover.setData(file.getBytes());
+            bookCover = bookCoverRepository.save(bookCover);
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new UploadResult(storeFilename);
+        return new UploadResult(bookCover.getId());
     }
 
-    public Resource viewCover(String filename) {
-        String uploadPath = new FileSystemResource(staticPath).getFile().getAbsolutePath();
-        Resource image = resourceLoader.getResource("file:" + uploadPath + "/" + filename);
-        if (!image.exists()) {
+    public byte[] viewCover(String id) {
+        Optional<BookCover> bookCover = bookCoverRepository.findById(id);
+        if (!bookCover.isPresent()) {
             throw new ResourceNotFoundException();
         }
-        return image;
+        return bookCover.get().getData();
     }
 
     public Page<BookSales> getSales(Date start, Date end, Pageable pageable) {

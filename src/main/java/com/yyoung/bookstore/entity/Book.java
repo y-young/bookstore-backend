@@ -52,8 +52,8 @@ public class Book implements Serializable {
     @ApiModelProperty("简介")
     private String description;
 
-    @Column(columnDefinition = "CHAR(36)")
-    @ApiModelProperty("封面图片路径")
+    @Column(columnDefinition = "CHAR(32)")
+    @ApiModelProperty("封面图片ID")
     private String cover;
 
     @Column(nullable = false)
