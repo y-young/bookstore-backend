@@ -36,4 +36,6 @@ public interface BookDao {
     List<Book> getLatest(Pageable pageable);
 
     List<Book> getBestSales(Pageable pageable);
+
+    Page<Book> getByRelatedTags(String tag, Pageable pageable);
 }

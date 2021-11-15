@@ -22,4 +22,6 @@ public interface SearchService {
     void removeFromIndex(List<Book> books);
 
     Page<Book> search(String query, Pageable pageable) throws SolrServerException, IOException;
+
+    Page<Book> searchByRelatedTags(String tag, Pageable pageable);
 }

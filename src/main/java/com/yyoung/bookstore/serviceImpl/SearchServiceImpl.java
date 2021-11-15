@@ -79,4 +79,8 @@ public class SearchServiceImpl implements SearchService {
     public void removeFromIndex(List<Book> books) {
         jmsTemplate.convertAndSend(jmsTopic, new IndexUpdateRequest(IndexAction.removeMany, books));
     }
+
+    public Page<Book> searchByRelatedTags(String tag, Pageable pageable) {
+        return bookDao.getByRelatedTags(tag, pageable);
+    }
 }

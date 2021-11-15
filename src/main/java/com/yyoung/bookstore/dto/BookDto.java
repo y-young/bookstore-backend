@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class BookDto {
@@ -30,8 +32,11 @@ public class BookDto {
     @Positive(message = "价格应为正数")
     private Integer price;
 
-    @ApiModelProperty("书籍类型")
+    @ApiModelProperty("类型")
     private String type;
+
+    @ApiModelProperty("标签")
+    private List<String> tags = new ArrayList<>();
 
     @ApiModelProperty("简介")
     private String description;

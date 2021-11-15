@@ -131,4 +131,10 @@ public class BookController {
     public DataResponse<List<Book>> getBestSales() {
         return new DataResponse<>(bookService.getBestSales());
     }
+
+    @ApiOperation("根据二重标签关系查找书籍")
+    @GetMapping("/tag/{tag}")
+    public DataResponse<Page<Book>> getByRelatedTags(@PathVariable("tag") String tag, Pageable pageable) {
+        return new DataResponse<>(searchService.searchByRelatedTags(tag, pageable));
+    }
 }

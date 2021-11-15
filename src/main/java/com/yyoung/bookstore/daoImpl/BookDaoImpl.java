@@ -3,7 +3,10 @@ package com.yyoung.bookstore.daoImpl;
 import com.yyoung.bookstore.dao.BookDao;
 import com.yyoung.bookstore.dto.BookSales;
 import com.yyoung.bookstore.entity.Book;
+import com.yyoung.bookstore.entity.BookNode;
+import com.yyoung.bookstore.entity.Tag;
 import com.yyoung.bookstore.exception.ResourceNotFoundException;
+import com.yyoung.bookstore.repository.BookNodeRepository;
 import com.yyoung.bookstore.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +22,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @CacheConfig(cacheNames = "books")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class BookDaoImpl implements BookDao {
     private final BookRepository bookRepository;
+    private final BookNodeRepository bookNodeRepository;
 
     public Book findById(Integer bookId) {
-        return bookRepository.findById(bookId).orElseThrow(ResourceNotFoundException::new);
+        Book book = bookRepository.findById(bookId).orElseThrow(ResourceNotFoundException::new);
+        BookNode bookNode = bookNodeRepository.findById(bookId).orElseGet(() -> new BookNode(book.getId()));
+        book.setTags(bookNode.getTags().stream().map(Tag::getName).collect(Collectors.toList()));
+        return book;
     }
 
     public List<Book> findByIdIn(List<Integer> bookIds) {
@@ -43,7 +51,19 @@ public class BookDaoImpl implements BookDao {
     }
 
     public Page<Book> findAll(Pageable pageable) {
-        return bookRepository.findByDeletedIsFalse(pageable);
+        Page<Book> books = bookRepository.findByDeletedIsFalse(pageable);
+        for (Book book :
+                books) {
+            book.setTags(
+                    bookNodeRepository
+                            .findById(book.getId())
+                            .orElseGet(() -> new BookNode(book.getId()))
+                            .getTags()
+                            .stream().map(Tag::getName)
+                            .collect(Collectors.toList())
+            );
+        }
+        return books;
     }
 
     public Page<Book> findAll(String keyword, Pageable pageable) {
@@ -51,11 +71,26 @@ public class BookDaoImpl implements BookDao {
     }
 
     public Book addOne(Book book) {
+        BookNode bookNode = new BookNode(book.getId());
+        for (String tagName :
+                book.getTags()) {
+            Tag tag = new Tag(tagName);
+            bookNode.hasTag(tag);
+        }
+        bookNodeRepository.save(bookNode);
         return bookRepository.save(book);
     }
 
     @CachePut(key = "#book.getId()")
     public Book updateOne(Book book) {
+        BookNode bookNode = bookNodeRepository.findById(book.getId()).orElseGet(() -> new BookNode(book.getId()));
+        for (String tagName :
+                book.getTags()) {
+            Tag tag = new Tag(tagName);
+            bookNode.hasTag(tag);
+        }
+        bookNode = bookNodeRepository.save(bookNode);
+        System.out.println(bookNode);
         return bookRepository.save(book);
     }
 
@@ -70,6 +105,7 @@ public class BookDaoImpl implements BookDao {
         });
     }
 
+    // Only used in batch deletion
     public void updateMany(List<Book> books) {
         bookRepository.saveAll(books);
     }
@@ -88,5 +124,13 @@ public class BookDaoImpl implements BookDao {
 
     public List<Book> getBestSales(Pageable pageable) {
         return bookRepository.getBestSales(pageable);
+    }
+
+    public Page<Book> getByRelatedTags(String tag, Pageable pageable) {
+        List<BookNode> bookNodes = bookNodeRepository.findBookNodeByRelatedTags(tag);
+        return bookRepository.findByIdIn(
+                bookNodes.stream().map(BookNode::getId).collect(Collectors.toList()),
+                pageable
+        );
     }
 }

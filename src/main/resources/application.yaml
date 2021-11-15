@@ -11,6 +11,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/bookstore
+  neo4j:
+    authentication:
+      username: neo4j
+      password: bookstore
   devtools:
     restart:
       enabled: true

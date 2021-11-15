@@ -9,6 +9,8 @@ import org.apache.solr.client.solrj.beans.Field;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -44,8 +46,12 @@ public class Book implements Serializable {
     @ApiModelProperty("价格（分）")
     private Integer price;
 
-    @ApiModelProperty("书籍类型")
+    @ApiModelProperty("类型")
     private String type;
+
+    @Transient
+    @ApiModelProperty("标签")
+    private List<String> tags = new ArrayList<>();
 
     @Field
     @Column(columnDefinition = "TEXT")
