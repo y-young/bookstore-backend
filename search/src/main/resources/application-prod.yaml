@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: search-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/bookstore?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC%2B8
+    username: bookstore
+    password: bookstore
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    tomcat:
+      max-active: 20
+  jpa:
+    database: mysql
+    show-sql: false
+    properties:
+      hibernate.hbm2ddl.auto: update
+server:
+  port: 8082
+  error:
+    include-stacktrace: never
+    include-message: always
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore.p12
+    key-store-password: bookstore
+    key-alias: tomcat
+eureka:
+  instance:
+    hostname: bookstore.gpx.moe
+    non-secure-port-enabled: false
+    secure-port-enabled: true
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info

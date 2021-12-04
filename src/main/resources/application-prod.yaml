@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: main-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/bookstore?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC%2B8
+    username: bookstore
+    password: bookstore
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    tomcat:
+      max-active: 20
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/bookstore
+  redis:
+    host: redis
+  neo4j:
+    authentication:
+      username: neo4j
+      password: bookstore
+    uri: bolt://neo4j:7687
+  devtools:
+    restart:
+      enabled: true
+  jpa:
+    database: mysql
+    show-sql: false
+    properties:
+      hibernate.hbm2ddl.auto: update
+  servlet:
+    multipart:
+      max-file-size: 5MB
+  mvc:
+    format:
+      date: yyyy-MM-dd
+server:
+  port: 8081
+  error:
+    include-stacktrace: never
+    include-message: always
+solr:
+  cloud: false
+  url: http://solr:8983/solr
+  collection: books
+eureka:
+  instance:
+    hostname: bookstore
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+  health:
+    solr:
+      enabled: false

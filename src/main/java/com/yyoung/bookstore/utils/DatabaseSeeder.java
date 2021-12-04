@@ -25,7 +25,9 @@ public class DatabaseSeeder {
             user.setId(1);
             user.setUsername("admin");
             user.setPassword(password);
-            user.setEmail(new Email("i@gpx.moe", user));
+            Email email = new Email("i@gpx.moe", user);
+            email.setId(1);
+            user.setEmail(email);
             user.setRole(Role.admin);
             user.setDisabled(false);
             userRepository.save(user);

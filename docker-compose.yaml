@@ -1,0 +1,82 @@
+version: "3.9"
+services:
+
+  redis:
+    image: redis:3-alpine
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "yyoung"
+      MYSQL_DATABASE: "bookstore"
+      MYSQL_USER: "bookstore"
+      MYSQL_PASSWORD: "bookstore"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  mongodb:
+    image: mongo:5-focal
+    volumes:
+      - mongodb-data:/data/db
+
+  neo4j:
+    image: neo4j:4.3
+    environment:
+      NEO4J_AUTH: "neo4j/bookstore"
+    volumes:
+      - neo4j-data:/data
+
+  eureka:
+    image: service-discovery:0.0.1-SNAPSHOT
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+
+  gateway:
+    image: gateway:0.0.1-SNAPSHOT
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+    depends_on:
+      - eureka
+      - bookstore
+
+  bookstore:
+    image: bookstore:0.0.1-SNAPSHOT
+#    ports:
+#      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+    depends_on:
+      - redis
+      - mysql
+      - mongodb
+      - neo4j
+      - eureka
+      - solr
+    deploy:
+      replicas: 2
+
+  solr:
+    image: solr:8-slim
+    # Control panel
+#    ports:
+#      - "8983:8983"
+    volumes:
+      - solr-data:/var/solr
+
+  frontend:
+    image: bookstore-frontend:latest
+    ports:
+      - "3000:80"
+    networks:
+      - frontend
+
+volumes:
+  mysql-data:
+  mongodb-data:
+  neo4j-data:
+  solr-data:
+
+networks:
+  frontend:
