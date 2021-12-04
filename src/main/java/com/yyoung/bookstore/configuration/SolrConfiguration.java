@@ -11,6 +11,10 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class SolrConfiguration {
     /*
+     * If SolrCloud mode is enabled.
+     */
+    private Boolean cloud;
+    /*
      * URL to root Solr path.
      */
     private String url;

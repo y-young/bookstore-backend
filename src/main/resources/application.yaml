@@ -52,6 +52,7 @@ server:
 #        transaction:
 #          interceptor: trace
 solr:
+  cloud: true
   url: http://localhost:8983/solr
   collection: books
 eureka:

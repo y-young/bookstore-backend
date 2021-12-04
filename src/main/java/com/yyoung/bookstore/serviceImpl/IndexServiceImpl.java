@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,10 @@ public class IndexServiceImpl implements IndexService {
     private final BookDao bookDao;
 
     private SolrClient getClient() {
-        return new CloudSolrClient.Builder(Collections.singletonList(solrConfiguration.getUrl())).build();
+        if(solrConfiguration.getCloud()) {
+            return new CloudSolrClient.Builder(Collections.singletonList(solrConfiguration.getUrl())).build();
+        }
+        return new HttpSolrClient.Builder(solrConfiguration.getUrl()).build();
     }
 
     @JmsListener(destination = "updateIndex")

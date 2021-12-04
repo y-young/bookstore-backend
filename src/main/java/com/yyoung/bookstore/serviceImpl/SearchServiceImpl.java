@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.MapSolrParams;
@@ -37,7 +38,10 @@ public class SearchServiceImpl implements SearchService {
     private final String jmsTopic = "updateIndex";
 
     private SolrClient getClient() {
-        return new CloudSolrClient.Builder(Collections.singletonList(solrConfiguration.getUrl())).build();
+        if(solrConfiguration.getCloud()) {
+            return new CloudSolrClient.Builder(Collections.singletonList(solrConfiguration.getUrl())).build();
+        }
+        return new HttpSolrClient.Builder(solrConfiguration.getUrl()).build();
     }
 
     public Page<Book> search(String query, Pageable pageable) throws SolrServerException, IOException {
