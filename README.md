@@ -1,8 +1,35 @@
 # Bookstore Backend
 
+An online bookstore powered by Spring Boot, from "Development of Internet Application" and "Architecture of Applications" courses.
+Contents preceding tag [v1.0](../../releases/tag/v1.0) are from the former course and others are from the latter.
+
+## Features & Highlights
+
+- Login and registration
+- Books management CRUD
+- Asynchronous order processing using JMS message queue
+- Sales and user purchase statistics
+- Fulltext search with Solr
+- Online chatroom using WebSocket
+- Unstructured data store with MongoDB*
+- Related tags search with neo4j*
+- Caching with Redis
+- Authentication using JWT with Spring Security filter
+- Authorization with Spring Security annotations
+- Request data validation using Spring Validation
+- Object Relation Mapping using Hibernate
+- Uniformed response format and common error handling
+- Swagger UI for RESTful API documentation and testing
+- Service discovery with Eureka*
+- Microservices and Spring Cloud Gateway*
+- Containerization and orchestration with Docker Compose
+
+*Disclaimer: items marked with \* are assignment requirements that I personally do not consider necessary or as best practices given the application scenarios and the small size of this project, they're acceptable in a course project, but be sure to avoid over-engineering in real-life development.*
+
 ## Run with Docker Compose
 
-Executing `docker-compose up -d` will start all services and initialize an empty database.
+First you'll need to build Docker images for all components using `spring-boot:build-image`.
+Executing `docker-compose up -d` will start all services and initialize an empty database with schemas.
 
 To restore data from dumps or migrate from existing databases, follow the instructions below:
 
@@ -26,7 +53,17 @@ To restore data from dumps or migrate from existing databases, follow the instru
 5. Load the dump into new database, execute in the new container: `./bin/neo4j-admin load --from=bookstore.dump --database=neo4j --force`
 
 ### Migrate Solr Data
+
 1. Enter `SOLR_DIRECTORY/server/solr/configsets/`
 2. Copy existing config set into container: `docker cp ./CONFIGSET_NAME/ CONTAINER_ID:/opt/solr-8.11.0/server/solr/configsets/bookstore`
 3. Create a Solr core using the config set: `docker exec -i --user=solr CONTAINER_ID bin/solr create_core -c books -d bookstore`
 4. Use API to trigger index initialization
+
+## Run Manually
+
+You'll need to manually install and configure all external programs like Solr and MongoDB according to `src/main/resources/application.yaml`.
+Then build all projects using `mvn clean package` or your IDE to generate JAR files. Finally, start each component in the order defined in `docker-compose.yaml`.
+
+## Plagiarism
+
+There is NO TOLERANCE for plagiarism. All the code here is only for REFERENCE, you MUST write the code yourself, direct copying is strictly FORBIDDEN.
